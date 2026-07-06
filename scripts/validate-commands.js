@@ -2,10 +2,13 @@
 /**
  * validate-commands.js
  *
- * Guards against silent drift across the three slash-command directories:
+ * Guards against silent drift across the slash-command directories that still
+ * use explicit command files:
  *   .claude/commands/  (.md — Claude Code)
- *   .gemini/commands/  (.toml — Gemini CLI)
- *   commands/          (.toml — Antigravity CLI)
+ *   .gemini/commands/  (.toml — legacy Gemini CLI)
+ *
+ * Antigravity CLI no longer uses TOML command files. Antigravity slash entries
+ * are generated from markdown skill files under skills/*.md.
  *
  * Checks (errors block CI):
  *   - Every command present in one directory exists in all three
@@ -30,10 +33,9 @@ const ROOT = path.resolve(__dirname, '..');
 const DIRS = {
   claude:     { dir: path.join(ROOT, '.claude', 'commands'), ext: '.md'   },
   gemini:     { dir: path.join(ROOT, '.gemini', 'commands'), ext: '.toml' },
-  antigravity:{ dir: path.join(ROOT, 'commands'),            ext: '.toml' },
 };
 
-// Commands where the file stem differs between Claude and the TOML dirs.
+// Commands where the file stem differs between Claude and the legacy TOML dir.
 // Key = Claude stem, value = TOML stem.
 const NAME_MAP = {
   plan: 'planning',
@@ -93,7 +95,6 @@ function main() {
   const byTool = {
     claude:      loadCommands(DIRS.claude),
     gemini:      loadCommands(DIRS.gemini),
-    antigravity: loadCommands(DIRS.antigravity),
   };
 
   // Canonical command list: use Claude stems as the reference.
@@ -101,7 +102,6 @@ function main() {
   const claudeStems = Object.keys(byTool.claude).sort();
   const allTomlStems = new Set([
     ...Object.keys(byTool.gemini),
-    ...Object.keys(byTool.antigravity),
   ]);
   const allCanonicalStems = new Set([
     ...claudeStems,
@@ -113,25 +113,24 @@ function main() {
   // ── Parity check ────────────────────────────────────────────────────────────
   console.log('Checking command parity...');
 
-  // Commands in Claude not found in TOML dirs
+  // Commands in Claude not found in the legacy TOML dir
   for (const stem of claudeStems) {
     const tomlStem = NAME_MAP[stem] ?? stem;
     const missing  = [];
     if (!(tomlStem in byTool.gemini))      missing.push('.gemini/commands');
-    if (!(tomlStem in byTool.antigravity)) missing.push('commands');
     if (missing.length) {
       console.log(`  ✗  ${stem} — missing in: ${missing.join(', ')}`);
       errors++;
     } else {
-      console.log(`  ✓  ${stem}${stem !== tomlStem ? ` (${tomlStem} in toml dirs)` : ''}`);
+      console.log(`  ✓  ${stem}${stem !== tomlStem ? ` (${tomlStem} in .gemini/commands)` : ''}`);
     }
   }
 
-  // Commands in TOML dirs not found in Claude
+  // Commands in the legacy TOML dir not found in Claude
   for (const stem of [...allTomlStems].sort()) {
     const claudeStem = NAME_MAP_REVERSE[stem] ?? stem;
     if (!(claudeStem in byTool.claude)) {
-      console.log(`  ✗  ${stem} — present in toml dirs but missing in .claude/commands`);
+      console.log(`  ✗  ${stem} — present in .gemini/commands but missing in .claude/commands`);
       errors++;
     }
   }
@@ -143,14 +142,13 @@ function main() {
     const tomlStem   = NAME_MAP[claudeStem] ?? claudeStem;
     const descClaude = byTool.claude[claudeStem];
     const descGemini = byTool.gemini[tomlStem];
-    const descAgy    = byTool.antigravity[tomlStem];
 
-    if (descClaude == null || descGemini == null || descAgy == null) {
+    if (descClaude == null || descGemini == null) {
       // Missing file already flagged by parity check
       continue;
     }
 
-    const allMatch = descClaude === descGemini && descGemini === descAgy;
+    const allMatch = descClaude === descGemini;
 
     if (allMatch) {
       console.log(`  ✓  ${claudeStem}`);
@@ -158,7 +156,6 @@ function main() {
       console.log(`  ✗  ${claudeStem}`);
       console.log(`       .claude:      ${descClaude}`);
       console.log(`       .gemini:      ${descGemini}`);
-      console.log(`       commands/:    ${descAgy}`);
       errors++;
     }
   }

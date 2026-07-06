@@ -111,7 +111,7 @@ Load an agent definition when you need specialized review. For example, ask your
 
 ## Using Commands
 
-The `.claude/commands/` directory contains slash commands for Claude Code and other harnesses that support command files. Commands are convenience wrappers, not the only way to use the workflows.
+The `.claude/commands/` directory contains slash commands for Claude Code. Antigravity slash entries are generated from markdown skill aliases in `skills/*.md`. Commands are convenience wrappers, not the only way to use the workflows.
 
 | Command | Skill Invoked |
 |---------|---------------|
@@ -139,11 +139,7 @@ If your agent platform does not support slash commands, use natural language. `A
 | `/ship` | "Ship-check this production change with rollback planning." |
 | `/webperf` | "Audit this web page's Core Web Vitals." |
 
-> **Note:** When installed as a Claude Code plugin you may see a warning like
-> _"Default commands/ folder is ignored because the manifest sets 'commands'"_.
-> This is expected. The root `commands/` directory belongs to the Antigravity CLI
-> and is intentionally separate from `.claude/commands/`. All Claude Code slash
-> commands load correctly from `.claude/commands/`; the warning is cosmetic.
+> **Note:** Antigravity CLI no longer uses TOML command files. Use markdown skills for Antigravity slash aliases.
 
 ## Using References
 

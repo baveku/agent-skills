@@ -1,13 +1,13 @@
 {
   "name": "agent-skills",
-  "description": "Production-grade engineering skills for AI coding agents, extended for web and mobile development.",
+  "description": "Production-grade engineering skills for AI coding agents, extended for Apple-platform development.",
   "author": {
     "name": "baveku"
   },
   "homepage": "https://github.com/baveku/agent-skills",
   "repository": "https://github.com/baveku/agent-skills",
   "license": "MIT",
-  "commands": ["./.claude/commands", "./commands"],
+  "commands": ["./.claude/commands"],
   "skills": "./skills",
   "agents": [
     "./agents/code-reviewer.md",

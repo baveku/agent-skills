@@ -19,7 +19,7 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 ## Commands
 
-8 lifecycle entry points map to the development workflow. They work as slash commands in harnesses that support commands, or as natural-language workflows through `AGENTS.md` and `using-agent-skills`.
+8 lifecycle entry points map to the development workflow. They work as Claude Code command files, Antigravity skill-generated slash commands, or natural-language workflows through `AGENTS.md` and `using-agent-skills`.
 
 | What you're doing | Command | Key principle |
 |-------------------|---------|---------------|
@@ -85,7 +85,7 @@ Copy any `SKILL.md` into `.cursor/rules/`, or reference the full `skills/` direc
 <details>
 <summary><b>Antigravity CLI</b></summary>
 
-Install as a native plugin for skills, subagents, and commands when supported. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
+Install as a native plugin for skills and subagents. Antigravity generates slash commands from markdown skill files, not TOML command files. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
 
 **Install from the repo:**
 
@@ -320,8 +320,8 @@ agent-skills/
 ├── references/                        # 5 supplementary checklists
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 8 slash commands (Claude Code)
-├── .gemini/commands/                  # 8 slash commands (Gemini CLI)
-├── commands/                          # 8 slash commands (Antigravity CLI)
+├── .gemini/commands/                  # 8 legacy slash commands (Gemini CLI)
+├── skills/*.md                        # 8 Antigravity skill-generated slash command aliases
 ├── plugin.json                        # Antigravity plugin manifest
 └── docs/                              # Setup guides per tool
 ```

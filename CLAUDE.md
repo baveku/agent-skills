@@ -8,7 +8,8 @@ This is the agent-skills project — a collection of production-grade engineerin
 skills/       → Core skills (SKILL.md per directory)
 agents/       → Reusable agent personas (code-reviewer, test-engineer, security-auditor, web-performance-auditor)
 hooks/        → Session lifecycle hooks
-.claude/commands/ → Slash commands (/spec, /plan, /build, /test, /review, /code-simplify, /ship; plus /webperf specialist audit)
+.claude/commands/ → Claude Code slash commands (/spec, /plan, /build, /test, /review, /code-simplify, /ship; plus /webperf specialist audit)
+skills/*.md → Antigravity skill aliases that generate slash commands
 references/   → Supplementary checklists (testing, performance, security, accessibility, observability)
 docs/         → Setup guides for different tools
 ```

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "baveku-agent-skills",
-  "description": "Production-grade engineering skills for AI coding agents, extended for web and mobile development.",
+  "description": "Production-grade engineering skills for AI coding agents, extended for Apple-platform development.",
   "owner": {
     "name": "baveku",
     "url": "https://github.com/baveku"
@@ -13,10 +13,10 @@
         "source": "github",
         "repo": "baveku/agent-skills"
       },
-      "description": "Production-grade engineering skills covering web and mobile development from spec to ship.",
+      "description": "Production-grade engineering skills covering web and Apple-platform development from spec to ship.",
       "homepage": "https://github.com/baveku/agent-skills",
       "license": "MIT",
-      "keywords": ["skills", "agents", "engineering", "mobile", "swiftui", "android", "kmp", "spec", "tdd", "review", "ship"]
+      "keywords": ["skills", "agents", "engineering", "apple", "ios", "macos", "swiftui", "swift", "spec", "tdd", "review", "ship"]
     }
   ]
 }

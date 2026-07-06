@@ -1,5 +1,5 @@
 {
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "agent-skills",
-  "version": "1.0.0",
-  "description": "Production-grade engineering skills for AI coding agents, extended for web and mobile development."
+  "description": "Production-grade engineering skills for AI coding agents, extended for Apple-platform development."
 }
