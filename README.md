@@ -103,25 +103,6 @@ agy plugin install ./agent-skills
 </details>
 
 <details>
-<summary><b>Gemini CLI</b></summary>
-
-Install as native skills for auto-discovery, or add to `GEMINI.md` for persistent context. See [docs/gemini-cli-setup.md](docs/gemini-cli-setup.md).
-
-**Install from the repo:**
-
-```bash
-gemini skills install https://github.com/baveku/agent-skills.git --path skills
-```
-
-**Install from a local clone:**
-
-```bash
-gemini skills install ./agent-skills/skills/
-```
-
-</details>
-
-<details>
 <summary><b>Windsurf</b></summary>
 
 Add skill contents to your Windsurf rules configuration. See [docs/windsurf-setup.md](docs/windsurf-setup.md).
@@ -320,7 +301,6 @@ agent-skills/
 ├── references/                        # 5 supplementary checklists
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 8 slash commands (Claude Code)
-├── .gemini/commands/                  # 8 legacy slash commands (Gemini CLI)
 ├── skills/<alias>/SKILL.md            # Antigravity skill-generated slash command aliases
 ├── claude/skills/                     # Alias-free skill view for Claude plugin installs
 ├── codex/skills/                      # Alias-free skill view for Codex-style installs

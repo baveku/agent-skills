@@ -205,7 +205,7 @@ Offer these one at a time, in order. Each is a separate yes/no question — do n
 
 1. **Additional settings.** Ask via `AskUserQuestion`: "There are additional diagnostic settings that could find more issues but may also produce false positives. Want to enable them?" If yes → read `references/additional-settings.md` and follow it.
 
-2. **Bounds safety programming models** (only if C or C++ code present). For C projects, ask: "Want to look into adopting `ENABLE_C_BOUNDS_SAFETY`? It's an annotation-based programming model for C bounds safety — invoke Xcode's `bounds-safety` skill to get started." For C++ projects, ask: "Want to look into adopting `ENABLE_CPLUSPLUS_BOUNDS_SAFE_BUFFERS`? It enables C++ bounds-safe buffer patterns — invoke Xcode's `bounds-safety` skill to get started."
+2. **Bounds safety programming models** (only if C or C++ code present). For C projects, ask: "Want to look into adopting `ENABLE_C_BOUNDS_SAFETY`? It's an annotation-based programming model for C bounds safety — invoke Xcode's `c-bounds-safety` skill to get started." For C++ projects, ask: "Want to look into adopting `ENABLE_CPLUSPLUS_BOUNDS_SAFE_BUFFERS`? It enables C++ bounds-safe buffer patterns — invoke Xcode's `c-bounds-safety` skill to get started."
 
 ## User-Facing Interaction Guidelines
 

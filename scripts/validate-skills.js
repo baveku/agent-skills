@@ -59,6 +59,48 @@ const SECTION_EXEMPT_SKILLS = {
   'idea-refine':        'Legacy structure predating skill-anatomy.md — uses How-It-Works/Usage/Anti-patterns instead of standard headings. Tracked for conformance in https://github.com/addyosmani/agent-skills/issues',
 };
 
+// Imported Apple/platform skills are kept close to their source format so they
+// can be updated manually without rewriting upstream content on every sync.
+// They still need SKILL.md frontmatter with name + description, but the
+// repository-specific anatomy rules below are not enforced for them.
+const NONSTANDARD_IMPORTED_SKILLS = {
+  'appstore-aso':                  'Imported Apple/App Store skill with upstream name and workflow format.',
+  'appstore-review':               'Imported Apple/App Store skill with upstream workflow format.',
+  'asc-cli-usage':                 'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-crash-triage':              'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-release-flow':              'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-signing-setup':             'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-submission-health':         'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-testflight-orchestration':  'Imported App Store Connect CLI skill with upstream workflow format.',
+  'asc-xcode-build':               'Imported App Store Connect CLI skill with upstream workflow format.',
+  'audit-xcode-security':          'Imported Apple security skill with upstream name and workflow format.',
+  'bug-hunt-swarm':                'Imported swarm skill with upstream workflow format.',
+  'c-bounds-safety':               'Imported C safety skill with upstream workflow format.',
+  'device-interaction':            'Imported Apple device interaction skill with upstream workflow format.',
+  'github-cli':                    'Imported GitHub CLI skill with upstream name and workflow format.',
+  'ios-accessibility':             'Imported iOS accessibility skill with upstream workflow format.',
+  'ios-debugger-agent':            'Imported iOS debugger skill with upstream workflow format.',
+  'macos-spm-packaging':           'Imported macOS packaging skill with upstream name and workflow format.',
+  'modernize-tests':               'Imported Swift testing migration skill with upstream workflow format.',
+  'review-swarm':                  'Imported swarm skill with upstream workflow format.',
+  'swift-architecture':            'Imported Swift architecture skill with upstream name and workflow format.',
+  'swift-concurrency-expert':      'Imported Swift concurrency skill with upstream workflow format.',
+  'swift-concurrency-pro':         'Imported Swift concurrency skill with upstream workflow format.',
+  'swift-security-expert':         'Imported Swift security skill with upstream workflow format.',
+  'swift-testing-pro':             'Imported Swift Testing skill with upstream workflow format.',
+  'swiftdata-pro':                 'Imported SwiftData skill with upstream workflow format.',
+  'swiftui-accessibility-auditor': 'Imported SwiftUI accessibility skill with upstream workflow format.',
+  'swiftui-liquid-glass':          'Imported SwiftUI Liquid Glass skill with upstream workflow format.',
+  'swiftui-performance-audit':     'Imported SwiftUI performance skill with upstream workflow format.',
+  'swiftui-pro':                   'Imported SwiftUI review skill with upstream workflow format.',
+  'swiftui-specialist':            'Imported SwiftUI specialist skill with upstream workflow format.',
+  'swiftui-ui-patterns':           'Imported SwiftUI UI skill with upstream workflow format.',
+  'swiftui-view-refactor':         'Imported SwiftUI refactor skill with upstream workflow format.',
+  'swiftui-whats-new-27':          'Imported SwiftUI SDK update skill with upstream workflow format.',
+  'uikit-accessibility-auditor':   'Imported UIKit accessibility skill with upstream workflow format.',
+  'uikit-modernization':           'Imported UIKit modernization skill with upstream name and workflow format.',
+};
+
 // Regex patterns that indicate an explicit cross-skill reference.
 // Only these patterns trigger the dead-reference warning — generic
 // backtick strings in code blocks are intentionally excluded.
@@ -120,7 +162,7 @@ function extractSkillReferences(content) {
 function validateSkill(dirName, knownSkills) {
   const errors   = [];
   const warnings = [];
-  let   exempt   = false;
+  let   label    = '';
   const skillPath = path.join(SKILLS_DIR, dirName, 'SKILL.md');
 
   if (!fs.existsSync(skillPath)) {
@@ -140,12 +182,14 @@ function validateSkill(dirName, knownSkills) {
   const fm = parseFrontmatter(content);
   if (!fm) {
     errors.push('Missing or malformed YAML frontmatter (expected --- block at top of file)');
-    return { errors, warnings, exempt };
+    return { errors, warnings, label };
   }
+
+  const nonstandardImported = dirName in NONSTANDARD_IMPORTED_SKILLS;
 
   if (!fm.name) {
     errors.push("Frontmatter missing required field: 'name'");
-  } else if (fm.name !== dirName) {
+  } else if (!nonstandardImported && fm.name !== dirName) {
     errors.push(`Frontmatter name '${fm.name}' does not match directory name '${dirName}'`);
   }
 
@@ -156,13 +200,13 @@ function validateSkill(dirName, knownSkills) {
   if (!fm.description) {
     errors.push("Frontmatter missing required field: 'description'");
   } else {
-    if (fm.description.length > MAX_DESCRIPTION_LENGTH) {
+    if (!nonstandardImported && fm.description.length > MAX_DESCRIPTION_LENGTH) {
       errors.push(
         `Description is ${fm.description.length} chars — exceeds the ${MAX_DESCRIPTION_LENGTH}-char limit` +
         ` (agents inject this into the system prompt)`
       );
     }
-    if (!DESCRIPTION_TRIGGER.test(fm.description)) {
+    if (!nonstandardImported && !DESCRIPTION_TRIGGER.test(fm.description)) {
       errors.push(
         `Description has no 'when to use' trigger — add a "Use when …" clause ` +
         `(skill-anatomy.md: Required — the description must say both what the skill does and when to use it)`
@@ -185,9 +229,14 @@ function validateSkill(dirName, knownSkills) {
   }
 
   // ── Required sections ────────────────────────────────────────────────────
-  exempt = dirName in SECTION_EXEMPT_SKILLS;
+  const sectionExempt = dirName in SECTION_EXEMPT_SKILLS || nonstandardImported;
+  if (nonstandardImported) {
+    label = ' (nonstandard imported skill)';
+  } else if (dirName in SECTION_EXEMPT_SKILLS) {
+    label = ' (section checks exempt)';
+  }
 
-  if (!exempt) {
+  if (!sectionExempt) {
     for (const aliases of REQUIRED_SECTIONS) {
       const found = aliases.some(heading => content.includes(heading));
       if (!found) {
@@ -204,7 +253,7 @@ function validateSkill(dirName, knownSkills) {
     }
   }
 
-  return { errors, warnings, exempt };
+  return { errors, warnings, label };
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
@@ -225,13 +274,12 @@ function main() {
   let totalWarnings = 0;
 
   for (const dirName of skillDirs) {
-    const { errors, warnings, exempt } = validateSkill(dirName, knownSkills);
+    const { errors, warnings, label } = validateSkill(dirName, knownSkills);
     totalErrors   += errors.length;
     totalWarnings += warnings.length;
 
     if (errors.length === 0 && warnings.length === 0) {
-      const tag = exempt ? ' (section checks exempt)' : '';
-      console.log(`  ✓  ${dirName}${tag}`);
+      console.log(`  ✓  ${dirName}${label}`);
     } else {
       const icon = errors.length > 0 ? '  ✗ ' : '  ⚠ ';
       console.log(`${icon} ${dirName}`);
