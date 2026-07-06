@@ -7,7 +7,7 @@ description: Audit browser-facing web performance. Use when reviewing Core Web V
 
 ## Overview
 
-Antigravity alias for web performance review. Use the web-performance-auditor agent persona.
+Antigravity slash alias for web performance review.
 
 ## When to Use
 
@@ -17,28 +17,21 @@ Antigravity alias for web performance review. Use the web-performance-auditor ag
 
 ## Process
 
-1. Confirm the target is browser-facing. Do not use this for native SwiftUI/UIKit or Apple-platform screens that do not render through a browser/webview.
-2. Use Deep mode when Lighthouse, PageSpeed Insights, CrUX, a DevTools trace, or a live URL with browser tooling is available.
-3. Use Quick mode from source when runtime evidence is unavailable.
-4. Label source-only findings as potential impact.
-5. Never fabricate metrics.
+1. Apply `rules/skill-routing.md`.
+2. Use the web performance auditor persona from `agents/web-performance-auditor.md`.
+3. Do not use this for native SwiftUI/UIKit or Apple-platform screens that do not render through a browser/webview.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 | --- | --- |
-| "I can estimate Core Web Vitals from code." | Metrics require evidence. |
-| "Native UI performance belongs here." | Native Apple performance uses Apple performance skills instead. |
+| "This alias has enough instructions." | The specialist persona owns the audit workflow; use it. |
 
 ## Red Flags
 
-- Reported metrics without a source.
-- Native UI audited as web performance.
-- Recommendations not tied to likely user impact.
+- The alias is followed without the specialist persona.
+- Routing rules are ignored.
 
 ## Verification
 
-- Mode is stated as Quick or Deep.
-- Measured metrics include their source.
-- Unmeasured fields are marked as not measured.
-
+- Web performance auditor verification is satisfied.

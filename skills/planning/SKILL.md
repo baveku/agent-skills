@@ -7,7 +7,7 @@ description: Break a validated spec into small implementation tasks. Use when th
 
 ## Overview
 
-Antigravity alias for task planning. Follow `planning-and-task-breakdown`.
+Antigravity slash alias for task planning.
 
 Use `/planning` instead of `/plan` because `/plan` may be reserved by the host.
 
@@ -19,28 +19,21 @@ Use `/planning` instead of `/plan` because `/plan` may be reserved by the host.
 
 ## Process
 
-1. Read `SPEC.md` or the equivalent spec.
-2. Identify dependencies and vertical slices.
-3. Write tasks with acceptance criteria and verification steps.
-4. Save the plan to `tasks/plan.md` and the task list to `tasks/todo.md`.
-5. Present the plan for review before build work starts.
+1. Apply `rules/skill-routing.md`.
+2. Follow `planning-and-task-breakdown`.
+3. Present the plan for review before build work starts.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 | --- | --- |
-| "I can build directly from the spec." | Plans protect dependency order and task size. |
-| "Tasks can be vague." | Vague tasks cause vague verification. |
+| "This alias has enough instructions." | The core workflow is `planning-and-task-breakdown`; use it. |
 
 ## Red Flags
 
-- Horizontal tasks like "build backend" and "build UI" instead of vertical slices.
-- No acceptance criteria per task.
-- No verification step per task.
+- The alias is followed without loading the core workflow.
+- Routing rules are ignored.
 
 ## Verification
 
-- `tasks/plan.md` exists.
-- `tasks/todo.md` exists.
-- Tasks are ordered by dependency and small enough to complete safely.
-
+- `planning-and-task-breakdown` verification is satisfied.

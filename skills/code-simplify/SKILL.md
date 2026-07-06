@@ -7,7 +7,7 @@ description: Simplify code while preserving behavior. Use when code works but is
 
 ## Overview
 
-Antigravity alias for simplification. Follow `code-simplification`.
+Antigravity slash alias for simplification.
 
 ## When to Use
 
@@ -17,36 +17,20 @@ Antigravity alias for simplification. Follow `code-simplification`.
 
 ## Process
 
-1. Understand purpose, callers, edge cases, and test coverage before editing.
-2. Classify the code surface and add the most specific Apple-platform skill when relevant:
-
-| Scope | Add this skill |
-| --- | --- |
-| SwiftUI view decomposition, state ownership, or layout cleanup | `swiftui-view-refactor` |
-| SwiftUI code quality review after simplification | `swiftui-pro` |
-| Swift concurrency or actor isolation cleanup | `swift-concurrency-pro` |
-| SwiftData model/query cleanup | `swiftdata-pro` |
-
-3. Apply simplifications incrementally.
-4. Run tests after each meaningful change.
-5. Stop or revert the simplification if behavior changes.
+1. Apply `rules/skill-routing.md`.
+2. Follow `code-simplification`.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 | --- | --- |
-| "This nearby cleanup is harmless." | Unrelated cleanup expands risk. |
-| "Simpler code does not need tests." | Behavior preservation needs evidence. |
+| "This alias has enough instructions." | The core workflow is `code-simplification`; use it. |
 
 ## Red Flags
 
-- Simplification changes behavior.
-- Dead code removed without understanding.
-- Tests fail after cleanup.
+- The alias is followed without loading the core workflow.
+- Routing rules are ignored.
 
 ## Verification
 
-- Tests pass.
-- Build passes when relevant.
-- Diff preserves behavior and reduces complexity.
-
+- `code-simplification` verification is satisfied.

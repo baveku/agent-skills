@@ -7,7 +7,7 @@ description: Run the pre-launch checklist and produce a go/no-go decision. Use w
 
 ## Overview
 
-Antigravity alias for release readiness. Follow `shipping-and-launch`.
+Antigravity slash alias for release readiness.
 
 ## When to Use
 
@@ -17,29 +17,21 @@ Antigravity alias for release readiness. Follow `shipping-and-launch`.
 
 ## Process
 
-1. Classify the release platform as web, Apple platform, or shared backend/library.
-2. Run or simulate flat fan-out review with `code-reviewer`, `security-auditor`, and `test-engineer`.
-3. Merge reports into one go/no-go decision.
-4. Check quality, security, performance, accessibility, infrastructure, documentation, runtime verification, and rollback plan.
-5. Use `browser-testing-with-devtools` for web runtime evidence.
-6. Use `ios-debugger-agent`, `device-interaction`, Xcode build/test commands, or App Store Connect skills for Apple release flow when relevant.
+1. Apply `rules/skill-routing.md`.
+2. Follow `shipping-and-launch`.
+3. Use `code-reviewer`, `security-auditor`, and `test-engineer` when the host supports subagents; otherwise run the same checks sequentially.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 | --- | --- |
-| "The diff is small, so it can ship." | Blast radius matters more than line count. |
-| "Rollback is obvious." | Rollback must be explicit before launch. |
+| "This alias has enough instructions." | The core workflow is `shipping-and-launch`; use it. |
 
 ## Red Flags
 
-- No rollback plan.
-- Critical finding ignored without explicit risk acceptance.
-- Runtime verification missing for user-facing behavior.
+- The alias is followed without loading the core workflow.
+- Routing rules are ignored.
 
 ## Verification
 
-- Go/no-go decision is explicit.
-- Blockers and acknowledged risks are listed.
-- Rollback trigger and procedure are documented.
-
+- `shipping-and-launch` verification is satisfied.

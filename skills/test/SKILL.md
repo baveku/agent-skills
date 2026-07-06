@@ -7,7 +7,7 @@ description: Run the TDD workflow and prove behavior with failing tests first. U
 
 ## Overview
 
-Antigravity alias for testing. Follow `test-driven-development`.
+Antigravity slash alias for testing.
 
 ## When to Use
 
@@ -18,35 +18,20 @@ Antigravity alias for testing. Follow `test-driven-development`.
 
 ## Process
 
-1. For new behavior, write tests that fail first.
-2. For bugs, reproduce with a failing test and confirm it fails.
-3. Implement the minimum change.
-4. Confirm the test passes and run regression tests.
-5. Add platform verification when relevant:
-
-| Platform / surface | Add this skill when available |
-| --- | --- |
-| Web runtime, DOM, console, network, visual behavior | `browser-testing-with-devtools` |
-| iOS simulator/device behavior | `ios-debugger-agent` or `device-interaction` |
-| Swift Testing test authoring/review | `swift-testing-pro` |
-| Swift concurrency tests | `swift-concurrency-pro` |
+1. Apply `rules/skill-routing.md`.
+2. Follow `test-driven-development`.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 | --- | --- |
-| "Manual checking is enough." | Tests prove behavior and prevent regressions. |
-| "The bug is obvious." | A failing repro prevents false fixes. |
+| "This alias has enough instructions." | The core workflow is `test-driven-development`; use it. |
 
 ## Red Flags
 
-- Test written after the fix without proving it fails.
-- Only happy-path coverage.
-- UI/runtime change verified only by reading code.
+- The alias is followed without loading the core workflow.
+- Routing rules are ignored.
 
 ## Verification
 
-- New or changed tests fail before the fix where applicable.
-- Targeted tests pass.
-- Regression suite or project-local equivalent passes.
-
+- `test-driven-development` verification is satisfied.
