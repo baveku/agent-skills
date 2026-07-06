@@ -36,6 +36,8 @@ Write a failing test before writing the code that makes it pass. For bug fixes, 
 
 Write the test first. It must fail. A test that passes immediately proves nothing.
 
+**Jest / TypeScript:**
+
 ```typescript
 // RED: This test fails because createTask doesn't exist yet
 describe('TaskService', () => {
@@ -50,9 +52,49 @@ describe('TaskService', () => {
 });
 ```
 
+**Swift Testing (`@Test` / `#expect` / `#require`):**
+
+```swift
+// RED: This test fails because TaskService.createTask doesn't exist yet
+import Testing
+@testable import MyApp
+
+struct TaskServiceTests {
+    @Test("Creates a task with title and default status")
+    func createTask() async throws {
+        let task = try await TaskService.createTask(title: "Buy groceries")
+
+        #expect(task.id != nil)
+        #expect(task.title == "Buy groceries")
+        #expect(task.status == .pending)
+        #expect(task.createdAt is Date)
+    }
+}
+```
+
+**XCTest alternative:**
+
+```swift
+import XCTest
+@testable import MyApp
+
+final class TaskServiceTests: XCTestCase {
+    func testCreateTaskWithTitleAndDefaultStatus() async throws {
+        let task = try await TaskService.createTask(title: "Buy groceries")
+
+        XCTAssertNotNil(task.id)
+        XCTAssertEqual(task.title, "Buy groceries")
+        XCTAssertEqual(task.status, .pending)
+        XCTAssert(task.createdAt is Date)
+    }
+}
+```
+
 ### Step 2: GREEN — Make It Pass
 
 Write the minimum code to make the test pass. Don't over-engineer:
+
+**TypeScript:**
 
 ```typescript
 // GREEN: Minimal implementation
@@ -65,6 +107,24 @@ export async function createTask(input: { title: string }): Promise<Task> {
   };
   await db.tasks.insert(task);
   return task;
+}
+```
+
+**Swift:**
+
+```swift
+// GREEN: Minimal implementation
+struct TaskService {
+    static func createTask(title: String) async throws -> AppTask {
+        let task = AppTask(
+            id: UUID(),
+            title: title,
+            status: .pending,
+            createdAt: Date()
+        )
+        try await db.tasks.insert(task)
+        return task
+    }
 }
 ```
 
@@ -104,6 +164,8 @@ Bug report arrives
 
 **Example:**
 
+**Jest / TypeScript:**
+
 ```typescript
 // Bug: "Completing a task doesn't update the completedAt timestamp"
 
@@ -122,6 +184,32 @@ export async function completeTask(id: string): Promise<Task> {
     status: 'completed',
     completedAt: new Date(),  // This was missing
   });
+}
+
+// Step 3: Test passes → bug fixed, regression guarded
+```
+
+**Swift Testing:**
+
+```swift
+// Bug: "Completing a task doesn't update the completedAt timestamp"
+
+// Step 1: Write the reproduction test (it should FAIL)
+@Test("Sets completedAt when task is completed")
+func completeTaskSetsTimestamp() async throws {
+    let task = try await TaskService.createTask(title: "Test")
+    let completed = try await TaskService.completeTask(id: task.id)
+
+    #expect(completed.status == .completed)
+    #expect(completed.completedAt != nil)  // This fails → bug confirmed
+}
+
+// Step 2: Fix the bug
+static func completeTask(id: UUID) async throws -> AppTask {
+    try await db.tasks.update(id: id, fields: [
+        .status: .completed,
+        .completedAt: Date(),  // This was missing
+    ])
 }
 
 // Step 3: Test passes → bug fixed, regression guarded
@@ -177,6 +265,8 @@ Is it a critical user flow that must work end-to-end?
 
 Assert on the *outcome* of an operation, not on which methods were called internally. Tests that verify method call sequences break when you refactor, even if the behavior is unchanged.
 
+**Jest / TypeScript:**
+
 ```typescript
 // Good: Tests what the function does (state-based)
 it('returns tasks sorted by creation date, newest first', async () => {
@@ -192,6 +282,23 @@ it('calls db.query with ORDER BY created_at DESC', async () => {
     expect.stringContaining('ORDER BY created_at DESC')
   );
 });
+```
+
+**Swift Testing:**
+
+```swift
+// Good: Tests what the function does (state-based)
+@Test("Returns tasks sorted by creation date, newest first")
+func listTasksSortedNewestFirst() async throws {
+    let tasks = try await listTasks(sortBy: .createdAt, order: .descending)
+    #expect(tasks[0].createdAt > tasks[1].createdAt)
+}
+
+// Bad: Tests how the function works internally (interaction-based)
+@Test func queriesWithOrderByDesc() async throws {
+    _ = try await listTasks(sortBy: .createdAt, order: .descending)
+    // Don't verify the exact SQL — verify the outcome
+}
 ```
 
 ### DAMP Over DRY in Tests
@@ -233,6 +340,8 @@ Preference order (most to least preferred):
 
 ### Use the Arrange-Act-Assert Pattern
 
+**Jest / TypeScript:**
+
 ```typescript
 it('marks overdue tasks when deadline has passed', () => {
   // Arrange: Set up the test scenario
@@ -247,6 +356,25 @@ it('marks overdue tasks when deadline has passed', () => {
   // Assert: Verify the outcome
   expect(result.isOverdue).toBe(true);
 });
+```
+
+**Swift Testing:**
+
+```swift
+@Test("Marks overdue tasks when deadline has passed")
+func overdueWhenDeadlinePassed() throws {
+    // Arrange
+    let task = createTask(
+        title: "Test",
+        deadline: Date("2025-01-01")
+    )
+
+    // Act
+    let result = checkOverdue(task, now: Date("2025-01-02"))
+
+    // Assert
+    #expect(result.isOverdue == true)
+}
 ```
 
 ### One Assertion Per Concept
@@ -374,10 +502,78 @@ For detailed testing patterns, examples, and anti-patterns across frameworks, se
 After completing any implementation:
 
 - [ ] Every new behavior has a corresponding test
-- [ ] All tests pass: `npm test`
+- [ ] All tests pass: `npm test` / `swift test` / `xcodebuild test`
 - [ ] Bug fixes include a reproduction test that failed before the fix
 - [ ] Test names describe the behavior being verified
 - [ ] No tests were skipped or disabled
 - [ ] Coverage hasn't decreased (if tracked)
 
 **Note:** Run each test command after a change that could affect the result. After a clean run, don't repeat the same command unless the code has changed since — re-running on unchanged code adds no confidence.
+
+## Swift / Xcode TDD Reference
+
+### Test Structure
+
+**Swift Package (SPM):**
+
+```
+MyPackage/
+├── Package.swift          ← test targets defined here
+├── Sources/
+│   └── MyApp/
+│       └── TaskService.swift
+└── Tests/
+    └── MyAppTests/
+        └── TaskServiceTests.swift
+```
+
+```swift
+// Package.swift — test target declaration
+.testTarget(
+    name: "MyAppTests",
+    dependencies: ["MyApp"]
+),
+```
+
+**Xcode project:** Tests live in a `*Tests` target. Create via File → New → Target → Unit Testing Bundle.
+
+### Running Tests
+
+```bash
+# SPM package
+swift test                                       # all tests
+swift test --filter TaskServiceTests              # specific suite
+swift test --filter TaskServiceTests/createTask   # specific test
+
+# Xcode project
+xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -scheme MyApp -destination 'platform=macOS'
+
+# Xcode command palette
+# ⌘U to run all tests, click the diamond gutter icon for individual tests
+```
+
+### Swift Testing vs XCTest
+
+| Feature | Swift Testing (modern) | XCTest (classic) |
+|---|---|---|
+| Test declaration | `@Test func ...` | `func test...()` (prefix required) |
+| Assertions | `#expect(a == b)`, `#require(val)` | `XCTAssertEqual(a, b)` |
+| Unwrap or fail | `let x = try #require(optional)` | `let x = try XCTUnwrap(optional)` |
+| Grouping | `struct` (any, nested OK) | `class: XCTestCase` |
+| Parameterized | `@Test(arguments: [...])` | Manual loop or separate methods |
+| Setup/teardown | `init` / `deinit` | `setUp()` / `tearDown()` |
+| Display name | `@Test("Descriptive name")` | Method name only |
+
+Prefer **Swift Testing** for new code (Xcode 16+ / Swift 6+). Use **XCTest** when you need `XCUITest` for UI testing, `XCTestExpectation` for async waits, or Objective-C interop.
+
+### Debugging via os_log
+
+```swift
+import os
+private let logger = Logger(subsystem: "com.app.tests", category: "TaskService")
+
+// Use os_log instead of print/console.log for structured diagnostics
+logger.debug("Task created: \(task.id)")
+logger.error("Unexpected status: \(task.status.rawValue)")
+```

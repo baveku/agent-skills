@@ -90,8 +90,9 @@ Each task follows this structure:
 - [ ] [Specific, testable condition]
 
 **Verification:**
-- [ ] Tests pass: `npm test -- --grep "feature-name"`
-- [ ] Build succeeds: `npm run build`
+- [ ] Tests pass: `npm test -- --grep "feature-name"` / `swift test --filter "FeatureName"`
+- [ ] Build succeeds: `npm run build` / `swift build` / `xcodebuild build`
+- [ ] Dependencies resolved: `npm install` / `swift package resolve`
 - [ ] Manual check: [description of what to verify]
 
 **Dependencies:** [Task numbers this depends on, or "None"]

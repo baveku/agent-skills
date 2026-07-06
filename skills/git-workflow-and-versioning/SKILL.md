@@ -212,6 +212,8 @@ This pattern catches wrong assumptions early and gives reviewers a clear map of 
 
 Before every commit:
 
+**Node / TypeScript projects:**
+
 ```bash
 # 1. Check what you're about to commit
 git diff --staged
@@ -229,7 +231,32 @@ npm run lint
 npx tsc --noEmit
 ```
 
+**Swift / Xcode projects:**
+
+```bash
+# 1. Check what you're about to commit
+git diff --staged
+
+# 2. Ensure no secrets
+git diff --staged | grep -i "password\|secret\|api_key\|token"
+
+# 3. Run tests (SPM)
+swift test
+
+# 3b. Run tests (Xcode project)
+xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# 4. Run linting
+swiftlint lint --strict
+
+# 5. Build check (catches type errors)
+swift build          # SPM
+xcodebuild build -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 16'
+```
+
 Automate this with git hooks:
+
+**Node (package.json + lint-staged + husky):**
 
 ```json
 // package.json (using lint-staged + husky)
@@ -241,11 +268,27 @@ Automate this with git hooks:
 }
 ```
 
+**Swift (pre-commit hook):**
+
+```bash
+#!/bin/sh
+# .git/hooks/pre-commit
+swift build 2>&1 || exit 1
+swift test 2>&1 || exit 1
+swiftlint lint --strict 2>&1 || exit 1
+```
+
 ## Handling Generated Files
 
+**Node / TypeScript:**
 - **Commit generated files** only if the project expects them (e.g., `package-lock.json`, Prisma migrations)
 - **Don't commit** build output (`dist/`, `.next/`), environment files (`.env`), or IDE config (`.vscode/settings.json` unless shared)
 - **Have a `.gitignore`** that covers: `node_modules/`, `dist/`, `.env`, `.env.local`, `*.pem`
+
+**Swift / Xcode:**
+- **Commit** `Package.swift`, `Package.resolved` (SPM lockfile), and `*.xcodeproj` / `*.xcworkspace`
+- **Don't commit** build artifacts (`.build/`, `DerivedData/`), user-specific Xcode state (`*.xcuserdata`), or provisioning profiles
+- **Have a `.gitignore`** that covers: `.build/`, `DerivedData/`, `*.xcuserdata/`, `.swiftpm/`, `Pods/` (if using CocoaPods), `*.ipa`
 
 ## Using Git for Debugging
 
@@ -282,6 +325,32 @@ For anything with consumers, version `MAJOR.MINOR.PATCH` and let the number carr
 ```
 
 The number is a promise, so make the code match it. A "patch" that changes behavior consumers relied on is a major change wearing a disguise (Hyrum's Law — see the `api-and-interface-design` skill). When unsure whether a change is breaking, assume it is; a surprise major is far cheaper than a broken consumer.
+
+### Where the Version Lives
+
+**Node / npm:**
+- `package.json` → `"version": "1.4.0"`
+- `npm version patch|minor|major` bumps the version, creates a git tag, and updates `package.json` in one command
+
+**Swift Package (SPM):**
+- Version is driven by git tags. No version field in `Package.swift`.
+- Consumers resolve the version from the tag: `.package(url: "...", from: "1.4.0")`
+
+**Xcode project (App Store / native app):**
+- `MARKETING_VERSION` (CFBundleShortVersionString) → the user-facing version (`1.4.0`)
+- `CURRENT_PROJECT_VERSION` (CFBundleVersion) → the build number (`42`), must increment every upload
+- Set in Xcode target → General → Identity, or via build settings:
+
+```bash
+# Bump via xcodebuild
+xcodebuild -target MyApp -configuration Release \
+  MARKETING_VERSION=1.4.0 \
+  CURRENT_PROJECT_VERSION=42
+
+# Or via agvtool
+agvtool new-marketing-version 1.4.0
+agvtool new-version -all 42
+```
 
 ### Tag the release, and let the tag be the source of truth
 
@@ -330,7 +399,7 @@ Write the entry in the same change that makes the change, while the impact is fr
 - Commit messages like "fix", "update", "misc"
 - Formatting changes mixed with behavior changes
 - No `.gitignore` in the project
-- Committing `node_modules/`, `.env`, or build artifacts
+- Committing `node_modules/`, `.build/`, `DerivedData/`, `.env`, or build artifacts
 - Long-lived branches that diverge significantly from main
 - Force-pushing to shared branches
 - A breaking change shipped under a minor or patch version bump
@@ -346,7 +415,7 @@ For every commit:
 - [ ] Tests pass before committing
 - [ ] No secrets in the diff
 - [ ] No formatting-only changes mixed with behavior changes
-- [ ] `.gitignore` covers standard exclusions
+- [ ] `.gitignore` covers standard exclusions (`node_modules/`, `dist/`, `.build/`, `DerivedData/`, `*.xcuserdata/`, `.env`)
 
 For every release (anything with consumers):
 

@@ -28,6 +28,10 @@ Ship with confidence. The goal is not just to deploy — it's to deploy safely, 
 - [ ] No TODO comments that should be resolved before launch
 - [ ] No `console.log` debugging statements in production code
 - [ ] Error handling covers expected failure modes
+- [ ] `xcodebuild test` passes on CI (or `swift test` for SPM packages)
+- [ ] No `print()` debugging statements in production code (use `os.Logger`)
+- [ ] SwiftLint passes with zero violations
+- [ ] Xcode build has zero warnings
 
 ### Security
 
@@ -38,6 +42,9 @@ Ship with confidence. The goal is not just to deploy — it's to deploy safely, 
 - [ ] Security headers configured (CSP, HSTS, etc.)
 - [ ] Rate limiting on authentication endpoints
 - [ ] CORS configured to specific origins (not wildcard)
+- [ ] App Transport Security (ATS) configured — no arbitrary loads in production
+- [ ] Keychain used for sensitive data (not UserDefaults)
+- [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) includes all required API reasons
 
 ### Performance
 
@@ -47,6 +54,10 @@ Ship with confidence. The goal is not just to deploy — it's to deploy safely, 
 - [ ] Bundle size within budget
 - [ ] Database queries have appropriate indexes
 - [ ] Caching configured for static assets and repeated queries
+- [ ] Launch time under 400ms (measure via MetricKit or Instruments)
+- [ ] No main-thread hangs > 250ms (check Xcode Organizer → Hang Rate)
+- [ ] Memory footprint within budget (Instruments → Leaks + Allocations)
+- [ ] App size optimized (asset catalogs, App Thinning)
 
 ### Accessibility
 
@@ -65,6 +76,10 @@ Ship with confidence. The goal is not just to deploy — it's to deploy safely, 
 - [ ] CDN configured for static assets
 - [ ] Logging and error reporting configured
 - [ ] Health check endpoint exists and responds
+- [ ] Provisioning profiles and certificates valid and not expiring soon
+- [ ] App Store Connect app record created with correct bundle ID
+- [ ] Push notification entitlements configured (if applicable)
+- [ ] CloudKit container configured (if applicable)
 
 ### Documentation
 
@@ -89,6 +104,19 @@ if (flags.taskSharing) {
 
 // Default: existing behavior
 return null;
+```
+
+#### Apple (Swift)
+
+```swift
+// Feature flag check (Firebase Remote Config, LaunchDarkly, or custom)
+let flags = try await FeatureFlags.fetch(for: userId)
+
+if flags.taskSharing {
+    TaskSharingView(task: task)
+} else {
+    EmptyView()
+}
 ```
 
 **Feature flag lifecycle:**
@@ -137,6 +165,35 @@ return null;
 6. FULL rollout (flag ON for all users)
    └── Monitor for 1 week
    └── Clean up feature flag
+```
+
+### Apple-Specific Rollout
+
+```
+1. INTERNAL TESTING (App Store Connect → TestFlight → Internal Group)
+   └── Up to 100 internal testers, no review required
+   └── Test critical flows on real devices
+
+2. EXTERNAL TESTING (TestFlight → External Group)
+   └── Requires Beta App Review (usually 24-48h)
+   └── Up to 10,000 external testers
+   └── Collect crash reports via Xcode Organizer
+
+3. APP STORE REVIEW
+   └── Submit for review with complete metadata
+   └── Review typically 24-48h
+   └── Respond to rejections promptly with specific fixes
+
+4. PHASED RELEASE (App Store Connect → Phased Release)
+   └── Day 1: 1% → Day 2: 2% → Day 3: 5% → Day 4: 10% → Day 5: 20% → Day 6: 50% → Day 7: 100%
+   └── Monitor crash-free rate in Xcode Organizer
+   └── Pause phased release if crash rate spikes
+   └── Can halt and resume at any stage
+
+5. POST-LAUNCH MONITORING
+   └── Xcode Organizer: crash reports, energy, launch time, hang rate
+   └── MetricKit payloads forwarded to backend
+   └── App Store Connect: ratings, reviews, crash-free sessions
 ```
 
 ### Rollout Decision Thresholds
@@ -222,6 +279,32 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 ```
 
+#### Apple (Swift)
+
+```swift
+import MetricKit
+import os
+
+private let logger = Logger(subsystem: "com.app", category: "errors")
+
+class CrashReporter: NSObject, MXMetricManagerSubscriber {
+    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        for payload in payloads {
+            if let crashDiagnostics = payload.crashDiagnostics {
+                for crash in crashDiagnostics {
+                    ErrorTracker.report(crash.callStackTree)
+                }
+            }
+            if let hangDiagnostics = payload.hangDiagnostics {
+                for hang in hangDiagnostics {
+                    logger.error("Hang detected: duration=\(hang.hangDuration)")
+                }
+            }
+        }
+    }
+}
+```
+
 ### Post-Launch Verification
 
 In the first hour after launch:
@@ -263,6 +346,21 @@ Every deployment needs a rollback plan before it happens:
 - Redeploy previous version: < 5 minutes
 - Database rollback: < 15 minutes
 ```
+
+### Apple Rollback Options
+
+```
+Rollback options (Apple):
+├── Phased release → Pause immediately in App Store Connect
+├── Critical fix → Submit expedited review (App Store Connect → Request Expedited Review)
+├── Feature flag → Disable server-side flag (instant, no new build)
+├── Remove from sale → Last resort, removes app from App Store entirely
+└── TestFlight → Push a fixed beta build while review is pending
+
+Note: Apple does NOT allow reverting to a previous binary.
+The only rollback is shipping a new fixed version.
+```
+
 ## See Also
 
 - For the project-wide Definition of Done that every change must clear before this checklist, see `references/definition-of-done.md`
@@ -308,3 +406,7 @@ After deploying:
 - [ ] Critical user flow works
 - [ ] Logs are flowing
 - [ ] Rollback tested or verified ready
+- [ ] TestFlight internal testing completed
+- [ ] Phased release configured (not immediate 100%)
+- [ ] MetricKit subscriber active and forwarding diagnostics
+- [ ] Crash-free session rate monitored in Xcode Organizer

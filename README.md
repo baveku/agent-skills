@@ -1,12 +1,10 @@
 # Agent Skills
 
-**Production-grade engineering skills for AI coding agents.**
+**Production-grade engineering skills for AI coding agents, extended for mobile development.**
 
-Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. These ones are packaged so AI agents follow them consistently across every phase of development.
+This is a fork of [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) that keeps the original production engineering lifecycle and adds stronger support for mobile development across iOS/SwiftUI, Android, React Native, and Kotlin Multiplatform (KMP).
 
-<a href="https://trendshift.io/repositories/25200" target="_blank"><img src="https://trendshift.io/api/badge/repositories/25200" alt="addyosmani%2Fagent-skills | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-
-![Addy's Agent Skills](https://addyosmani.com/assets/images/addys-agent-skills.jpg)
+Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. They are packaged so AI agents follow them consistently across web, backend, and mobile development.
 
 ```
   DEFINE          PLAN           BUILD          VERIFY         REVIEW          SHIP
@@ -21,7 +19,7 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 ## Commands
 
-8 slash commands that map to the development lifecycle. Each one activates the right skills automatically.
+8 lifecycle entry points map to the development workflow. They work as slash commands in harnesses that support commands, or as natural-language workflows through `AGENTS.md` and `using-agent-skills`.
 
 | What you're doing | Command | Key principle |
 |-------------------|---------|---------------|
@@ -36,7 +34,18 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 Want fewer manual steps once the spec exists? **`/build auto`** generates the plan and implements every task in a single approved pass — you approve the plan once, then it runs autonomously. It removes the human stepping *between* tasks, not the verification: every task is still test-driven and committed individually, and it pauses on failures or risky steps.
 
-Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on.
+Skills also activate automatically based on what you're doing. Web UI triggers `frontend-ui-engineering`; SwiftUI work prefers `swiftui-ui-patterns`, `swiftui-view-refactor`, or `swiftui-pro`; platform gaps fall back to `source-driven-development` plus local project docs.
+
+### Mobile development support
+
+This fork adds platform-aware routing for:
+
+- **iOS / SwiftUI** — SwiftUI UI patterns, view refactors, performance audits, accessibility, Swift concurrency, SwiftData, Apple security, simulator/device verification.
+- **Android** — Android-specific skills when present, with source-driven fallback to local Android docs and build/test commands.
+- **React Native** — React Native-specific skills when present, with web/mobile UI and native runtime verification fallbacks.
+- **Kotlin Multiplatform (KMP)** — shared API/model/testing workflows, with platform host routing for Android and iOS surfaces.
+
+Apple and mobile skills are vendored directly under `skills/` and updated manually. This repo does not depend on a fixed local external path or sync cache.
 
 ---
 
@@ -48,20 +57,20 @@ Skills also activate automatically based on what you're doing — designing an A
 **Marketplace install:**
 
 ```
-/plugin marketplace add addyosmani/agent-skills
-/plugin install agent-skills@addy-agent-skills
+/plugin marketplace add baveku/agent-skills
+/plugin install agent-skills@baveku-agent-skills
 ```
 
 > **SSH errors?** The marketplace clones repos via SSH. If you don't have SSH keys set up on GitHub, either [add your SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) or use the full HTTPS URL to force the HTTPS cloning:
 > ```bash
-> /plugin marketplace add https://github.com/addyosmani/agent-skills.git
-> /plugin install agent-skills@addy-agent-skills
+> /plugin marketplace add https://github.com/baveku/agent-skills.git
+> /plugin install agent-skills@baveku-agent-skills
 > ```
 
 **Local / development:**
 
 ```bash
-git clone https://github.com/addyosmani/agent-skills.git
+git clone https://github.com/baveku/agent-skills.git
 claude --plugin-dir /path/to/agent-skills
 ```
 
@@ -77,18 +86,18 @@ Copy any `SKILL.md` into `.cursor/rules/`, or reference the full `skills/` direc
 <details>
 <summary><b>Antigravity CLI</b></summary>
 
-Install as a native plugin for skills, subagents, and slash commands. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
+Install as a native plugin for skills, subagents, and commands when supported. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
 
 **Install from the repo:**
 
 ```bash
-agy plugin install https://github.com/addyosmani/agent-skills.git
+agy plugin install https://github.com/baveku/agent-skills.git
 ```
 
 **Install from a local clone:**
 
 ```bash
-git clone https://github.com/addyosmani/agent-skills.git
+git clone https://github.com/baveku/agent-skills.git
 agy plugin install ./agent-skills
 ```
 
@@ -102,7 +111,7 @@ Install as native skills for auto-discovery, or add to `GEMINI.md` for persisten
 **Install from the repo:**
 
 ```bash
-gemini skills install https://github.com/addyosmani/agent-skills.git --path skills
+gemini skills install https://github.com/baveku/agent-skills.git --path skills
 ```
 
 **Install from a local clone:**
@@ -152,9 +161,9 @@ Skills are plain Markdown - they work with any agent that accepts system prompts
 
 ---
 
-## All 24 Skills
+## Skill Catalog
 
-The commands above are entry points. The pack includes 24 skills total — 23 lifecycle skills plus the `using-agent-skills` meta-skill. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
+The commands above are entry points. The pack includes core lifecycle skills plus platform-specific extensions for mobile and Apple-platform development. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
 
 ### Meta - Discover which skill applies
 
@@ -228,7 +237,7 @@ Pre-configured specialist personas for targeted reviews:
 | [security-auditor](agents/security-auditor.md) | Security Engineer | Vulnerability detection, threat modeling, OWASP assessment |
 | [web-performance-auditor](agents/web-performance-auditor.md) | Web Performance Engineer | Core Web Vitals audit with Quick/Deep modes and a metric-honesty rule; run it via `/webperf` |
 
-See [docs/agents.md](docs/agents.md) for the decision matrix, orchestration rules, and how personas compose with skills and slash commands.
+See [docs/agents.md](docs/agents.md) for the decision matrix, orchestration rules, and how personas compose with skills and entry points.
 
 ---
 
@@ -260,7 +269,7 @@ Every skill follows a consistent anatomy:
 │  │ name: lowercase-hyphen-name               │  │
 │  │ description: Guides agents through [task].│  │
 │  │              Use when…                    │  │
-│  └───────────────────────────────────────────┘  │                                                                                                
+│  └───────────────────────────────────────────┘  │
 │  Overview         → What this skill does        │
 │  When to Use      → Triggering conditions       │
 │  Process          → Step-by-step workflow       │
@@ -283,7 +292,7 @@ Every skill follows a consistent anatomy:
 
 ```
 agent-skills/
-├── skills/                            # 24 skills (23 lifecycle + 1 meta)
+├── skills/                            # Core lifecycle + platform-specific skills
 │   ├── interview-me/                  #   Define
 │   ├── idea-refine/                   #   Define
 │   ├── spec-driven-development/       #   Define

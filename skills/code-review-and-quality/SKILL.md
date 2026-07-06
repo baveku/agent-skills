@@ -28,10 +28,11 @@ Every review evaluates code across these dimensions:
 Does the code do what it claims to do?
 
 - Does it match the spec or task requirements?
-- Are edge cases handled (null, empty, boundary values)?
+- Are edge cases handled (null/nil, empty, boundary values)?
 - Are error paths handled (not just the happy path)?
 - Does it pass all tests? Are the tests actually testing the right things?
 - Are there off-by-one errors, race conditions, or state inconsistencies?
+- **Swift-specific:** Are optionals handled safely (no force-unwraps outside tests)? Are value types vs reference types chosen intentionally? Do concurrent types conform to `Sendable`? Is actor isolation correct?
 
 ### 2. Readability & Simplicity
 
@@ -59,7 +60,7 @@ Does the change fit the system's design?
 - Is the abstraction level appropriate (not over-engineered, not too coupled)?
 - **Does this refactor reduce complexity or just relocate it?** Count the concepts a reader must hold to follow the change. If a "cleaner" version leaves that count unchanged, it isn't cleaner — prefer the restructuring that makes whole branches, modes, or layers disappear over one that re-centralizes the same logic. Prefer deleting an abstraction to polishing it.
 - **Is feature-specific logic leaking into a shared or general-purpose module?** Keep logic in its owning layer, reuse the existing canonical helper instead of a near-duplicate, and don't normalize architectural drift.
-- **Are type boundaries explicit?** Question gratuitous `any`/`unknown`/optional/casts and silent fallbacks that paper over an unclear invariant — making the boundary explicit often makes the surrounding control flow simpler.
+- **Are type boundaries explicit?** Question gratuitous `any`/`unknown`/optional/casts and silent fallbacks that paper over an unclear invariant — making the boundary explicit often makes the surrounding control flow simpler. In Swift, question `as!` force-casts and overuse of `Any` — prefer protocol-based generics.
 
 ### 4. Security
 
@@ -284,7 +285,7 @@ Part of code review is dependency review:
 1. Does the existing stack solve this? (Often it does.)
 2. How large is the dependency? (Check bundle impact.)
 3. Is it actively maintained? (Check last commit, open issues.)
-4. Does it have known vulnerabilities? (`npm audit`)
+4. Does it have known vulnerabilities? (`npm audit` / SPM dependency review)
 5. What's the license? (Must be compatible with the project.)
 
 **Rule:** Prefer standard library and existing utilities over new dependencies. Every dependency is a liability.
@@ -329,7 +330,9 @@ Part of code review is dependency review:
 
 ### Verification
 - [ ] Tests pass
-- [ ] Build succeeds
+- [ ] Build succeeds (`npm run build` / `swift build` / `xcodebuild build`)
+- [ ] Type checking passes (`npx tsc --noEmit` / compiler builds clean)
+- [ ] Linting passes (`npm run lint` / `swiftlint`)
 - [ ] Manual verification done (if applicable)
 
 ### Verdict

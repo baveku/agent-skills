@@ -11,7 +11,13 @@ Agent Skills is a collection of engineering workflow skills organized by develop
 
 ## Skill Discovery
 
-When a task arrives, identify the development phase and apply the corresponding skill:
+When a task arrives, classify it before choosing skills:
+
+1. **Lifecycle** — define, plan, build, verify, review, ship.
+2. **Platform** — web, iOS, Android, React Native, KMP, or shared backend/library.
+3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release.
+
+Prefer the most specific available platform skill. Do not invent missing skills; if a platform-specific skill does not exist, fall back to the generic lifecycle skill plus `source-driven-development` and project-local commands.
 
 ```
 Task arrives
@@ -21,18 +27,25 @@ Task arrives
     ├── New project/feature/change? ──→ spec-driven-development
     ├── Have a spec, need tasks? ──────→ planning-and-task-breakdown
     ├── Implementing code? ────────────→ incremental-implementation
-    │   ├── UI work? ─────────────────→ frontend-ui-engineering
+    │   ├── Web UI? ──────────────────→ frontend-ui-engineering
+    │   ├── SwiftUI UI? ───────────────→ swiftui-ui-patterns / swiftui-view-refactor
+    │   ├── Android UI? ───────────────→ android-* skill if present, else source-driven-development
+    │   ├── React Native UI? ──────────→ react-native-* skill if present, else frontend-ui-engineering
+    │   ├── KMP shared logic? ─────────→ kmp-* skill if present, else api-and-interface-design
     │   ├── API work? ────────────────→ api-and-interface-design
     │   ├── Need better context? ─────→ context-engineering
     │   ├── Need doc-verified code? ───→ source-driven-development
     │   └── Stakes high / unfamiliar code? ──→ doubt-driven-development
     ├── Writing/running tests? ────────→ test-driven-development
-    │   └── Browser-based? ───────────→ browser-testing-with-devtools
+    │   ├── Web runtime? ──────────────→ browser-testing-with-devtools
+    │   ├── iOS runtime? ──────────────→ ios-debugger-agent / device-interaction
+    │   └── Swift Testing? ────────────→ swift-testing-pro if present
     ├── Something broke? ──────────────→ debugging-and-error-recovery
     ├── Reviewing code? ───────────────→ code-review-and-quality
     │   ├── Too complex? ─────────────→ code-simplification
-    │   ├── Security concerns? ───────→ security-and-hardening
-    │   └── Performance concerns? ────→ performance-optimization
+    │   ├── SwiftUI review? ──────────→ swiftui-pro
+    │   ├── Security concerns? ───────→ platform-specific security skill, else security-and-hardening
+    │   └── Performance concerns? ────→ platform-specific performance skill, else performance-optimization
     ├── Committing/branching? ─────────→ git-workflow-and-versioning
     ├── CI/CD pipeline work? ──────────→ ci-cd-and-automation
     ├── Deprecating/migrating? ────────→ deprecation-and-migration
@@ -133,9 +146,32 @@ These are the subtle errors that look like productivity but create problems:
 
 2. **Skills are workflows, not suggestions.** Follow the steps in order. Don't skip verification steps.
 
-3. **Multiple skills can apply.** A feature implementation might involve `idea-refine` → `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` → `test-driven-development` → `code-review-and-quality` → `code-simplification` → `shipping-and-launch` in sequence.
+3. **Specific beats generic.** A SwiftUI performance task uses `swiftui-performance-audit` before `performance-optimization`; a web runtime task uses `browser-testing-with-devtools` before generic test guidance.
 
-4. **When in doubt, start with a spec.** If the task is non-trivial and there's no spec, begin with `spec-driven-development`.
+4. **Limit active skills.** Prefer one lifecycle skill, one platform/domain skill, and one verification skill per turn. Add more only when the user asks for a full workflow or the change is production-bound and cross-cutting.
+
+5. **Multiple skills can apply.** A feature implementation might involve `idea-refine` → `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` → `test-driven-development` → `code-review-and-quality` → `code-simplification` → `shipping-and-launch` in sequence.
+
+6. **When in doubt, start with a spec.** If the task is non-trivial and there's no spec, begin with `spec-driven-development`.
+
+7. **Do not invent missing skills.** For Android, React Native, or KMP work, use platform-specific skills when they exist. If they do not, combine the generic lifecycle skill with `source-driven-development`, local project docs, and the platform's build/test commands.
+
+## Platform Routing
+
+| Platform / surface | Prefer | Fallback |
+| --- | --- | --- |
+| Web UI | `frontend-ui-engineering` | `api-and-interface-design` for contracts |
+| Web runtime verification | `browser-testing-with-devtools` | project test scripts |
+| Web performance | `/webperf`, `performance-optimization` | `browser-testing-with-devtools` for runtime evidence |
+| iOS SwiftUI UI | `swiftui-ui-patterns`, `swiftui-view-refactor` | `frontend-ui-engineering` for generic UI principles |
+| iOS SwiftUI review | `swiftui-pro` | `code-review-and-quality` |
+| iOS SwiftUI performance | `swiftui-performance-audit` | `performance-optimization` |
+| iOS accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | `frontend-ui-engineering` accessibility rules |
+| iOS runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands |
+| Swift concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | generic review/security skills |
+| Android | `android-*` skills when present | `source-driven-development` + local Android docs |
+| React Native | `react-native-*` skills when present | `frontend-ui-engineering` + platform runtime verification |
+| KMP shared logic | `kmp-*` skills when present | `api-and-interface-design` + `test-driven-development` |
 
 ## Lifecycle Sequence
 
@@ -174,15 +210,22 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 | Build | source-driven-development | Verify against official docs before implementing |
 | Build | doubt-driven-development | Adversarial fresh-context review of every non-trivial decision |
 | Build | context-engineering | Right context at the right time |
-| Build | frontend-ui-engineering | Production-quality UI with accessibility |
+| Build | frontend-ui-engineering | Production-quality web UI with accessibility; fallback for unknown UI |
+| Build | swiftui-ui-patterns | SwiftUI-native UI, navigation, state, and layout patterns |
+| Build | swiftui-view-refactor | SwiftUI refactoring, state ownership, and view decomposition |
 | Build | api-and-interface-design | Stable interfaces with clear contracts |
 | Verify | test-driven-development | Failing test first, then make it pass |
-| Verify | browser-testing-with-devtools | Chrome DevTools MCP for runtime verification |
+| Verify | browser-testing-with-devtools | Web runtime verification with Chrome DevTools MCP |
+| Verify | ios-debugger-agent / device-interaction | iOS simulator/device runtime verification when available |
+| Verify | swift-testing-pro | Swift Testing guidance when available |
 | Verify | debugging-and-error-recovery | Reproduce → localize → fix → guard |
 | Review | code-review-and-quality | Five-axis review with quality gates |
 | Review | code-simplification | Preserve behavior while reducing unnecessary complexity |
 | Review | security-and-hardening | OWASP prevention, input validation, least privilege |
 | Review | performance-optimization | Measure first, optimize only what matters |
+| Review | swiftui-pro | SwiftUI-specific review |
+| Review | swiftui-performance-audit | SwiftUI-specific performance audit |
+| Review | swiftui-accessibility-auditor | SwiftUI accessibility audit |
 | Ship | git-workflow-and-versioning | Atomic commits, clean history |
 | Ship | ci-cd-and-automation | Automated quality gates on every change |
 | Ship | deprecation-and-migration | Remove old systems and migrate users safely |

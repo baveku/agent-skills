@@ -6,6 +6,8 @@ Invoke the agent-skills:shipping-and-launch skill.
 
 `/ship` is a **fan-out orchestrator**. It runs three specialist personas in parallel against the current change, then merges their reports into a single go/no-go decision with a rollback plan. The personas operate independently — no shared state, no ordering — which is what makes parallel execution safe and useful here.
 
+Before fan-out, classify the release platform: web, iOS, Android, React Native, KMP, or shared backend/library. Use the platform classification to decide which extra checks the main merge phase must run after the three reports return.
+
 ## Phase A — Parallel fan-out
 
 Spawn three subagents concurrently using the Agent tool. **Issue all three Agent tool calls in a single assistant turn so they execute in parallel** — sequential calls defeat the purpose of this command.
@@ -31,10 +33,17 @@ Once all three reports are back, the main agent (not a sub-persona) synthesizes 
 
 1. **Code Quality** — Aggregate Critical/Important findings from `code-reviewer` and any failing tests, lint, or build output. Resolve duplicates between reviewers.
 2. **Security** — Promote any Critical/High `security-auditor` findings to launch blockers. Cross-reference with `code-reviewer`'s security axis.
-3. **Performance** — Pull from `code-reviewer`'s performance axis; cross-check Core Web Vitals if applicable.
-4. **Accessibility** — Verify keyboard nav, screen reader support, contrast (not covered by the three personas — handle directly here, or invoke the accessibility checklist).
+3. **Performance** — Pull from `code-reviewer`'s performance axis, then apply platform-specific checks:
+   - Web: Core Web Vitals via `/webperf` or `performance-optimization` when evidence exists.
+   - SwiftUI/iOS: `swiftui-performance-audit` or Instruments/MetricKit evidence when relevant.
+   - Android, React Native, KMP: platform-specific performance skill if present; otherwise require project-local performance evidence.
+4. **Accessibility** — Apply platform-specific accessibility checks:
+   - Web: keyboard navigation, screen reader support, contrast.
+   - SwiftUI/iOS: `swiftui-accessibility-auditor` or `ios-accessibility` when available.
+   - Android/RN/KMP: platform accessibility checklist or project-local guidance.
 5. **Infrastructure** — Env vars, migrations, monitoring, feature flags. Verify directly.
 6. **Documentation** — README, ADRs, changelog. Verify directly.
+7. **Runtime verification** — Web uses `browser-testing-with-devtools`; iOS uses `ios-debugger-agent` or `device-interaction`; Android/RN/KMP use platform-specific tooling when present, otherwise project-local smoke tests.
 
 ## Phase C — Decision and rollback
 

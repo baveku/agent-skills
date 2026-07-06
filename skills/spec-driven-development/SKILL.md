@@ -46,6 +46,16 @@ ASSUMPTIONS I'M MAKING:
 → Correct me now or I'll proceed with these.
 ```
 
+**Apple-platform variant:**
+```
+ASSUMPTIONS I'M MAKING:
+1. This is a native Apple app (SwiftUI, iOS 17+ / macOS 14+)
+2. Authentication uses Sign in with Apple + Keychain persistence
+3. Local persistence uses SwiftData (based on existing @Model definitions)
+4. We're targeting current and current-minus-one OS versions only
+→ Correct me now or I'll proceed with these.
+```
+
 Don't silently fill in ambiguous requirements. The spec's entire purpose is to surface misunderstandings *before* code gets written — assumptions are the most dangerous form of misunderstanding.
 
 **Write a spec document covering these six core areas:**
@@ -53,6 +63,8 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
 1. **Objective** — What are we building and why? Who is the user? What does success look like?
 
 2. **Commands** — Full executable commands with flags, not just tool names.
+
+   **Web / Node:**
    ```
    Build: npm run build
    Test: npm test -- --coverage
@@ -60,7 +72,19 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
    Dev: npm run dev
    ```
 
+   **Apple / Swift:**
+   ```
+   Build: xcodebuild build -scheme [Scheme] -destination 'platform=iOS Simulator,name=iPhone 16'
+   Test (SPM): swift test --enable-code-coverage
+   Test (Xcode): xcodebuild test -scheme [Scheme] -destination '...'
+   Lint: swiftlint --fix
+   Preview: Xcode Previews / #Preview { ContentView() }
+   Resolve deps: swift package resolve
+   ```
+
 3. **Project Structure** — Where source code lives, where tests go, where docs belong.
+
+   **Web project:**
    ```
    src/           → Application source code
    src/components → React components
@@ -70,14 +94,39 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
    docs/          → Documentation
    ```
 
+   **Swift package (SPM):**
+   ```
+   Sources/[Target]/        → Application source code
+   Sources/[Target]/Views/  → SwiftUI views
+   Sources/[Target]/Models/ → SwiftData @Model types
+   Sources/Shared/          → Shared utilities
+   Tests/[Target]Tests/     → Unit tests (Swift Testing / XCTest)
+   Tests/IntegrationTests/  → Integration tests
+   docs/                    → Documentation
+   Package.swift            → Dependency manifest (replaces package.json)
+   ```
+
+   **Xcode project (non-SPM):**
+   ```
+   [App]/               → Application source code
+   [App]/Views/         → SwiftUI views
+   [App]/Models/        → SwiftData @Model types
+   [App]/Services/      → Business logic & networking
+   [App]Tests/          → Unit tests
+   [App]UITests/        → UI tests (XCUITest)
+   [App].xcodeproj      → Xcode project file
+   ```
+
 4. **Code Style** — One real code snippet showing your style beats three paragraphs describing it. Include naming conventions, formatting rules, and examples of good output.
 
 5. **Testing Strategy** — What framework, where tests live, coverage expectations, which test levels for which concerns.
+   - **Web:** Jest / Vitest for unit tests, Playwright / Cypress for E2E, colocate `*.test.ts` next to source.
+   - **Apple:** Swift Testing (`@Test`, `#expect`, `#require`) for new tests; XCTest for UI tests (XCUITest). Colocate `*Tests.swift` in the matching `Tests/` target. Use `swift test --enable-code-coverage` or Xcode's coverage report.
 
 6. **Boundaries** — Three-tier system:
    - **Always do:** Run tests before commits, follow naming conventions, validate inputs
-   - **Ask first:** Database schema changes, adding dependencies, changing CI config
-   - **Never do:** Commit secrets, edit vendor directories, remove failing tests without approval
+   - **Ask first:** Database schema changes (Prisma migrations / SwiftData `@Model` changes), adding dependencies (`npm install` / SPM packages), changing CI config
+   - **Never do:** Commit secrets (`.env`, `.p12`, provisioning profiles), edit vendor directories (`node_modules/`, `.build/`, `DerivedData/`), remove failing tests without approval
 
 **Spec template:**
 
@@ -116,6 +165,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
 
 **Reframe instructions as success criteria.** When receiving vague requirements, translate them into concrete conditions:
 
+**Web example:**
 ```
 REQUIREMENT: "Make the dashboard faster"
 
@@ -123,6 +173,18 @@ REFRAMED SUCCESS CRITERIA:
 - Dashboard LCP < 2.5s on 4G connection
 - Initial data load completes in < 500ms
 - No layout shift during load (CLS < 0.1)
+→ Are these the right targets?
+```
+
+**Apple example:**
+```
+REQUIREMENT: "Make the dashboard faster"
+
+REFRAMED SUCCESS CRITERIA:
+- Dashboard appears in < 1s (Time to Interactive, measured via Instruments Time Profiler)
+- SwiftData @Query fetch completes in < 200ms (os_log timestamps)
+- No hitches during scroll (Instruments Animation Hitches < 5ms threshold)
+- App launch to first meaningful frame < 2s (measured via MetricKit / Instruments App Launch)
 → Are these the right targets?
 ```
 

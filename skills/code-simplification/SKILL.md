@@ -270,6 +270,72 @@ def process(data):
     return do_work(data)
 ```
 
+### Swift
+
+```swift
+// SIMPLIFY: Pyramid of doom with optionals
+// Before
+func processUser(_ user: User?) {
+    if let user = user {
+        if let email = user.email {
+            if email.contains("@") {
+                sendVerification(to: email)
+            }
+        }
+    }
+}
+// After
+func processUser(_ user: User?) {
+    guard let user, let email = user.email, email.contains("@") else { return }
+    sendVerification(to: email)
+}
+
+// SIMPLIFY: Verbose switch with return
+// Before
+func statusLabel(_ status: Status) -> String {
+    switch status {
+    case .pending:
+        return "Pending"
+    case .active:
+        return "Active"
+    case .archived:
+        return "Archived"
+    }
+}
+// After — Swift 5.9+ implicit return in switch
+var label: String {
+    switch status {
+    case .pending: "Pending"
+    case .active: "Active"
+    case .archived: "Archived"
+    }
+}
+
+// SIMPLIFY: Manual array filtering
+// Before
+var activeUsers: [User] = []
+for user in users {
+    if user.isActive {
+        activeUsers.append(user)
+    }
+}
+// After
+let activeUsers = users.filter(\.isActive)
+
+// SIMPLIFY: Redundant boolean
+// Before
+func isValid(_ input: String) -> Bool {
+    if input.count > 0 && input.count < 100 {
+        return true
+    }
+    return false
+}
+// After
+func isValid(_ input: String) -> Bool {
+    input.count > 0 && input.count < 100
+}
+```
+
 ### React / JSX
 
 ```tsx
@@ -291,6 +357,37 @@ function UserBadge({ user }: Props) {
 
 // SIMPLIFY: Prop drilling through intermediate components
 // Before — consider whether context or composition solves this better.
+// This is a judgment call — flag it, don't auto-refactor.
+```
+
+### SwiftUI
+
+```swift
+// SIMPLIFY: Verbose conditional view
+// Before
+struct UserBadge: View {
+    let user: User
+    var body: some View {
+        if user.isAdmin {
+            Badge("Admin", variant: .admin)
+        } else {
+            Badge("User", variant: .default)
+        }
+    }
+}
+// After
+struct UserBadge: View {
+    let user: User
+    var body: some View {
+        Badge(
+            user.isAdmin ? "Admin" : "User",
+            variant: user.isAdmin ? .admin : .default
+        )
+    }
+}
+
+// SIMPLIFY: Over-nested view hierarchy
+// Before — consider extracting subviews or using ViewModifiers.
 // This is a judgment call — flag it, don't auto-refactor.
 ```
 
@@ -328,4 +425,6 @@ After completing a simplification pass:
 - [ ] Simplified code follows project conventions (checked against CLAUDE.md or equivalent)
 - [ ] No error handling was removed or weakened
 - [ ] No dead code was left behind (unused imports, unreachable branches)
+- [ ] `swift build` succeeds with no new warnings
+- [ ] SwiftLint passes with no new violations
 - [ ] A teammate or review agent would approve the change as a net improvement

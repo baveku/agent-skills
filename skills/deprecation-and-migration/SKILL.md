@@ -91,6 +91,25 @@ Don't deprecate without a working alternative. The replacement must:
 3. Run the migration verification script: `npx migrate-check`
 ```
 
+**Swift deprecation attributes:**
+
+```swift
+// Mark API as deprecated with a message and replacement
+@available(*, deprecated, message: "Use NewService instead")
+func oldServiceCall() { ... }
+
+// Mark API as available from a specific platform version
+@available(iOS 17, *)
+func newServiceCall() { ... }
+
+// Guard against unavailable APIs at the call site
+if #unavailable(iOS 17) {
+    oldServiceCall()
+} else {
+    newServiceCall()
+}
+```
+
 ### Step 3: Migrate Incrementally
 
 Migrate consumers one at a time, not all at once. For each consumer:

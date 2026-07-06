@@ -163,6 +163,29 @@ export async function createTask(input: CreateTaskInput): Promise<Task> {
 }
 ```
 
+### Inline with `///` Doc Comments (Preferred for Swift)
+
+Swift uses `///` comments and DocC-flavored markdown. Use `- Parameters:`, `- Returns:`, and `- Throws:` tags:
+
+```swift
+/// Creates a new task.
+///
+/// - Parameters:
+///   - input: Task creation data (title required, description optional).
+/// - Returns: The created task with server-generated ID and timestamps.
+/// - Throws: `ValidationError` if title is empty or exceeds 200 characters.
+///
+/// ```swift
+/// let task = try await createTask(input: .init(title: "Buy groceries"))
+/// print(task.id) // "task_abc123"
+/// ```
+func createTask(input: CreateTaskInput) async throws -> Task {
+    // ...
+}
+```
+
+For Swift packages and frameworks, use **DocC** (`Documentation.docc/`) to publish rich, structured documentation with tutorials and articles.
+
 ### OpenAPI / Swagger for REST APIs
 
 ```yaml
@@ -198,9 +221,9 @@ One-paragraph description of what this project does.
 
 ## Quick Start
 1. Clone the repo
-2. Install dependencies: `npm install`
+2. Install dependencies: `npm install` / `swift package resolve`
 3. Set up environment: `cp .env.example .env`
-4. Run the dev server: `npm run dev`
+4. Run the dev server: `npm run dev` / `swift run` / open in Xcode
 
 ## Commands
 | Command | Description |

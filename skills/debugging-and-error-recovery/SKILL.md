@@ -84,6 +84,19 @@ npm test -- --verbose
 npm test -- --testPathPattern="specific-file" --runInBand
 ```
 
+#### Apple (Swift/Xcode)
+
+```bash
+# Run the specific failing test
+swift test --filter "TestClassName/testMethodName"
+
+# Run with verbose output
+swift test --verbose
+
+# Run in Xcode: ⌘U for all tests, click diamond ◇ next to a test to run it alone
+# Use Test Navigator (⌘6) to see pass/fail status
+```
+
 ### Step 2: Localize
 
 Narrow down WHERE the failure happens:
@@ -98,6 +111,18 @@ Which layer is failing?
 └── Test itself     → Check if the test is correct (false negative)
 ```
 
+#### Apple (Swift/Xcode)
+
+```
+Which layer is failing? (Apple)
+├── UI/SwiftUI       → Xcode View Debugger (Debug → View Debugging → Capture View Hierarchy)
+├── Networking       → Instruments → Network template, or URLSession logging
+├── Data/SwiftData   → Check model container, schema migrations
+├── Build tooling    → Check .xcconfig, SPM resolution, signing
+├── External service → Check connectivity, API changes, Keychain
+└── Test itself      → Check if XCTest/swift-testing assertion is correct
+```
+
 **Use bisection for regression bugs:**
 ```bash
 # Find which commit introduced the bug
@@ -106,6 +131,11 @@ git bisect bad                    # Current commit is broken
 git bisect good <known-good-sha> # This commit worked
 # Git will checkout midpoint commits; run your test at each
 git bisect run npm test -- --grep "failing test"
+```
+
+```bash
+# Xcode: use xcodebuild in git bisect
+git bisect run xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
 ### Step 3: Reduce
@@ -149,6 +179,21 @@ it('finds tasks with special characters in title', async () => {
 });
 ```
 
+#### Apple (swift-testing)
+
+```swift
+import Testing
+
+@Test("finds tasks with special characters in title")
+func taskSearchSpecialChars() async throws {
+    let store = TaskStore()
+    try await store.create(Task(title: "Fix \"quotes\" & <brackets>"))
+    let results = try await store.search("quotes")
+    #expect(results.count == 1)
+    #expect(results[0].title == "Fix \"quotes\" & <brackets>")
+}
+```
+
 This test will prevent the same bug from recurring. It should fail without the fix and pass with it.
 
 ### Step 6: Verify End-to-End
@@ -167,6 +212,21 @@ npm run build
 
 # Manual spot check if applicable
 npm run dev  # Verify in browser
+```
+
+#### Apple (Swift/Xcode)
+
+```bash
+# Run the specific test
+swift test --filter "TestClassName/testMethodName"
+
+# Run the full test suite
+swift test
+
+# Build the project
+xcodebuild build -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# Run in Xcode and check Console (⇧⌘C) or Instruments
 ```
 
 ## Error-Specific Patterns
@@ -194,6 +254,17 @@ Build fails:
 ├── Config error → Check build config files for syntax/schema issues
 ├── Dependency error → Check package.json, run npm install
 └── Environment error → Check Node version, OS compatibility
+```
+
+### Build Failure Triage (Xcode/SPM)
+
+```
+Build fails:
+├── Type error → Read the error in Issue Navigator (⌘5), check the types
+├── Import error → Check SPM Package.resolved, clean build folder (⇧⌘K)
+├── Signing error → Check Signing & Capabilities, provisioning profiles
+├── Linker error → Check target membership, framework search paths
+└── Swift version → Check SWIFT_VERSION build setting, package compatibility
 ```
 
 ### Runtime Error Triage
@@ -237,6 +308,37 @@ function renderChart(data: ChartData[]) {
     console.error('Chart render failed:', error);
     return <ErrorState message="Unable to display chart" />;
   }
+}
+```
+
+#### Apple (Swift)
+
+```swift
+import os
+
+private let logger = Logger(subsystem: "com.app", category: "config")
+
+// Safe default + warning
+func getConfig(_ key: String) -> String {
+    guard let value = ProcessInfo.processInfo.environment[key] else {
+        logger.warning("Missing config: \(key), using default")
+        return defaults[key] ?? ""
+    }
+    return value
+}
+
+// Graceful degradation in SwiftUI
+struct ChartView: View {
+    let data: [ChartData]
+    var body: some View {
+        if data.isEmpty {
+            ContentUnavailableView("No Data", systemImage: "chart.bar")
+        } else {
+            Chart(data) { item in
+                BarMark(x: .value("Label", item.label), y: .value("Value", item.value))
+            }
+        }
+    }
 }
 ```
 
@@ -297,4 +399,6 @@ After fixing a bug:
 - [ ] A regression test exists that fails without the fix
 - [ ] All existing tests pass
 - [ ] Build succeeds
+- [ ] Xcode build succeeds (⌘B) with no warnings
+- [ ] LLDB breakpoints verified at root cause location
 - [ ] The original bug scenario is verified end-to-end

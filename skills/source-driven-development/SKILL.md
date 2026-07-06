@@ -41,6 +41,8 @@ Read the project's dependency file to identify exact versions:
 
 ```
 package.json    → Node/React/Vue/Angular/Svelte
+Package.swift   → Swift/SwiftUI/SPM
+*.xcodeproj / *.xcworkspace → Xcode/iOS/macOS
 composer.json   → PHP/Symfony/Laravel
 requirements.txt / pyproject.toml → Python/Django/Flask
 go.mod          → Go
@@ -68,10 +70,10 @@ Fetch the specific documentation page for the feature you're implementing. Not t
 
 | Priority | Source | Example |
 |----------|--------|---------|
-| 1 | Official documentation | react.dev, docs.djangoproject.com, symfony.com/doc |
-| 2 | Official blog / changelog | react.dev/blog, nextjs.org/blog |
-| 3 | Web standards references | MDN, web.dev, html.spec.whatwg.org |
-| 4 | Browser/runtime compatibility | caniuse.com, node.green |
+| 1 | Official documentation | react.dev, docs.djangoproject.com, developer.apple.com/documentation |
+| 2 | Official blog / changelog | react.dev/blog, nextjs.org/blog, swift.org/blog |
+| 3 | Web/platform standards references | MDN, web.dev, html.spec.whatwg.org, Swift Evolution proposals (swift.org/swift-evolution) |
+| 4 | Platform sessions / compatibility | caniuse.com, node.green, WWDC session videos (developer.apple.com/wwdc) |
 
 **Not authoritative — never cite as primary sources:**
 
@@ -176,7 +178,7 @@ Honesty about what you couldn't verify is more valuable than false confidence.
 - Implementing a pattern without knowing which version it applies to
 - Citing Stack Overflow or blog posts instead of official documentation
 - Using deprecated APIs because they appear in training data
-- Not reading `package.json` / dependency files before implementing
+- Not reading `package.json` / `Package.swift` / dependency files before implementing
 - Delivering code without source citations for framework-specific decisions
 - Fetching an entire docs site when only one page is relevant
 

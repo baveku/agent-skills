@@ -190,8 +190,8 @@ When directing an agent to implement incrementally:
 Start with just the database schema change and the API endpoint.
 Don't touch the UI yet — we'll do that in the next increment.
 
-After implementing, run `npm test` and `npm run build` to verify
-nothing is broken."
+After implementing, run `npm test` / `swift test` and
+`npm run build` / `swift build` to verify nothing is broken."
 ```
 
 Be explicit about what's in scope and what's NOT in scope for each increment.
@@ -201,9 +201,9 @@ Be explicit about what's in scope and what's NOT in scope for each increment.
 After each increment, verify:
 
 - [ ] The change does one thing and does it completely
-- [ ] All existing tests still pass (`npm test`)
-- [ ] The build succeeds (`npm run build`)
-- [ ] Type checking passes (`npx tsc --noEmit`)
+- [ ] All existing tests still pass (`npm test` / `swift test`)
+- [ ] The build succeeds (`npm run build` / `swift build` / `xcodebuild build`)
+- [ ] Type checking passes (`npx tsc --noEmit` / compiler builds clean)
 - [ ] Linting passes (`npm run lint`)
 - [ ] The new functionality works as expected
 - [ ] The change is committed with a descriptive message

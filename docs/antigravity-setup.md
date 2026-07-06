@@ -1,24 +1,24 @@
 # Using agent-skills with Antigravity CLI (agy)
 
-The `agent-skills` package can be installed as a native plugin in the Antigravity CLI (`agy`), giving the agent access to structured workflows, personas, and custom slash commands.
+The `agent-skills` package can be installed as a native plugin in the Antigravity CLI (`agy`), giving the agent access to structured workflows and personas. Commands are convenient entry points when the harness supports them, but the core integration is skill-driven and also works from natural-language requests.
 
 ## Setup
 
 ### Option 1: Native Plugin Installation (Recommended)
 
-Antigravity CLI has a first-class plugin system that registers skills, agents, and custom commands.
+Antigravity CLI has a first-class plugin system that registers skills, agents, and, when supported by the installed CLI version, custom commands.
 
 **Install from the remote repository:**
 
 ```bash
-agy plugin install https://github.com/addyosmani/agent-skills.git
+agy plugin install https://github.com/baveku/agent-skills.git
 ```
 
 **Install from a local clone:**
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/addyosmani/agent-skills.git
+   git clone https://github.com/baveku/agent-skills.git
    ```
 2. Install the plugin using `agy`:
    ```bash
@@ -41,9 +41,9 @@ agy plugin list
 
 ---
 
-## Slash Commands
+## Commands and Commandless Use
 
-The plugin registers 8 custom slash commands: 7 lifecycle commands plus the `/webperf` specialist audit:
+When custom commands are available, the plugin registers 8 entry points: 7 lifecycle commands plus the `/webperf` specialist audit:
 
 | Command | What it does | Activated Skill |
 |---------|--------------|-----------------|
@@ -60,11 +60,25 @@ Each command automatically invokes the corresponding skill and guides the agent 
 
 > **Note:** Use `/planning` instead of `/plan` to avoid conflicts with Antigravity's internal plan-generation command.
 
+Commands are optional. If your Antigravity environment does not expose plugin slash commands, use natural-language lifecycle requests instead:
+
+| Say this | Equivalent workflow |
+|---------|---------------------|
+| "Define this feature with a spec first" | `spec-driven-development` |
+| "Plan this into small tasks" | `planning-and-task-breakdown` |
+| "Build the next slice" | `incremental-implementation` + `test-driven-development` |
+| "Test this bug with a failing repro first" | `test-driven-development` + `debugging-and-error-recovery` |
+| "Review this change before merge" | `code-review-and-quality` |
+| "Ship-check this production change" | `shipping-and-launch` |
+| "Audit this web page's Core Web Vitals" | `web-performance-auditor` / `/webperf` |
+
+The agent should still classify the task by lifecycle, platform, and surface using `AGENTS.md`, then load the most specific skill available.
+
 ---
 
 ## Skills & Discovery
 
-Antigravity automatically discovers skills inside the plugin's `skills/` directory. 
+Antigravity automatically discovers skills inside the plugin's `skills/` directory.
 * Antigravity matches user tasks and intents to relevant skills on-demand.
 * If a task matches a skill, the agent will load the skill and prompt you for permission before executing.
 
@@ -88,6 +102,9 @@ For example, when you ask the agent to:
 - **Design a new system** &rarr; It will suggest/activate `spec-driven-development`.
 - **Implement a feature** &rarr; It will activate `incremental-implementation` and `test-driven-development`.
 - **Fix a bug** &rarr; It will activate `debugging-and-error-recovery`.
+- **Build SwiftUI UI** &rarr; It will prefer `swiftui-ui-patterns` or `swiftui-view-refactor` over generic UI guidance.
+- **Verify browser behavior** &rarr; It will use `browser-testing-with-devtools`.
+- **Work on Android, React Native, or KMP** &rarr; It will use platform-specific skills when present, otherwise fall back to `source-driven-development` plus local project docs.
 
 ### 2. Specialized Agent Personas
 The plugin registers reusable subagent definitions from the `agents/` directory:

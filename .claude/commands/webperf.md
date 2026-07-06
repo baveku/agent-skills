@@ -2,7 +2,16 @@
 description: Run a web performance audit via the web-performance-auditor persona
 ---
 
-`/webperf` targets web applications specifically. Do not use it for utility libraries, CLIs, or server-only code with no browser-facing output.
+`/webperf` targets web applications specifically: browser-rendered pages, SPAs, SSR/SSG apps, and webviews where Core Web Vitals apply. Do not use it for utility libraries, CLIs, server-only code, native SwiftUI/UIKit, Android Compose, KMP shared logic, or React Native screens that do not render through a browser/webview.
+
+For non-web platforms:
+
+| Platform | Use instead |
+| --- | --- |
+| SwiftUI/iOS performance | `swiftui-performance-audit` |
+| iOS runtime verification | `ios-debugger-agent` or `device-interaction` |
+| General native performance | `performance-optimization` |
+| Android, React Native, or KMP | platform-specific performance skill if present; otherwise project-local profiling guidance plus `source-driven-development` |
 
 ## Determine the mode
 

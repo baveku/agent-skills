@@ -90,6 +90,29 @@ app.use((req, res, next) => {
 
 **Never log secrets, tokens, passwords, or full PII.** This is a hard rule from the `security-and-hardening` skill — telemetry pipelines are a classic data-leak path. Allowlist fields; don't log whole request bodies.
 
+#### Apple (os.Logger)
+
+```swift
+import os
+
+extension Logger {
+    static let payments = Logger(subsystem: "com.app", category: "payments")
+}
+
+// BAD: string interpolation in print — unqueryable, no levels
+print("Payment \(id) failed for user \(userId) after \(n) retries")
+
+// GOOD: structured os.Logger — appears in Console.app, filterable by category
+Logger.payments.warning(
+    "payment_failed: paymentId=\(id) provider=stripe errorCode=\(err.code) attempt=\(n)"
+)
+
+// Privacy-aware: redact PII by default
+Logger.payments.info("user_action: userId=\(userId, privacy: .private) action=checkout")
+```
+
+**Correlation IDs (Apple):** Pass a request/trace ID through your async call chain. In server-side Swift (Vapor), use `req.logger` which carries metadata per-request. For client apps, generate a UUID at the start of each user flow and pass it through.
+
 ### 4. Metrics
 
 For request-driven services, instrument **RED** on every endpoint and every external dependency: **R**ate (requests/sec), **E**rrors (failure rate), **D**uration (latency histogram, not average). For resources (queues, pools, hosts), use **USE**: **U**tilization, **S**aturation, **E**rrors.
@@ -116,6 +139,45 @@ NEVER a label:  user_id, email, request_id, full URL, error message text
 
 Track averages never, percentiles always: an average hides the 1% of users having a terrible time. Use histograms and read p50/p95/p99.
 
+#### Apple (MetricKit / OSSignposter)
+
+On Apple platforms, system-level metrics are collected automatically via **MetricKit**:
+
+```swift
+import MetricKit
+
+class AppMetricsManager: NSObject, MXMetricManagerSubscriber {
+    func didReceive(_ payloads: [MXMetricPayload]) {
+        for payload in payloads {
+            // Automatic: launch time, hang rate, disk/memory/CPU, cellular data
+            if let launchMetrics = payload.applicationLaunchMetrics {
+                // Process launch time histogram buckets
+            }
+        }
+    }
+
+    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        for payload in payloads {
+            // Crash reports, hang diagnostics, disk-write exceptions
+        }
+    }
+}
+```
+
+For custom performance intervals, use **OSSignposter** (replaces os_signpost):
+
+```swift
+import os
+
+let signposter = OSSignposter(subsystem: "com.app", category: "Checkout")
+
+func chargePayment(_ payment: Payment) async throws -> Receipt {
+    let state = signposter.beginInterval("chargePayment", id: signposter.makeSignpostID())
+    defer { signposter.endInterval("chargePayment", state) }
+    // ... payment logic visible as an interval in Instruments → os_signpost
+}
+```
+
 ### 5. Distributed tracing
 
 Use OpenTelemetry — it's the vendor-neutral standard, and auto-instrumentation covers HTTP, gRPC, and common DB clients with near-zero code:
@@ -133,6 +195,17 @@ sdk.start();
 ```
 
 Add manual spans only around meaningful internal units of work (e.g., `applyDiscounts`, `chargeProvider`) and attach the attributes on-call will filter by. Propagate context across every async boundary — HTTP headers, queue message metadata — or the trace dies at the gap. Sample head-based at a low rate by default; keep 100% of errors if your backend supports tail sampling.
+
+#### Apple (Instruments)
+
+On Apple platforms, **Instruments** replaces distributed tracing for local profiling:
+
+- **Time Profiler** — CPU hotspots
+- **Network** — HTTP request waterfall, latency per hop
+- **SwiftUI View Body** — view re-evaluation frequency
+- **os_signpost** intervals — custom spans (see §4 above)
+
+For server-side Swift (Vapor), use [swift-distributed-tracing](https://github.com/apple/swift-distributed-tracing) which integrates with OpenTelemetry.
 
 ### 6. Alerting
 
@@ -153,6 +226,17 @@ Rules for every alert you create:
 2. **It links to a runbook** — even three lines: what it means, first query to run, escalation path.
 3. **It has a threshold and duration** justified by the SLO or by historical data, not by a guess.
 4. Use two severities only: **page** (user-facing, act now) and **ticket** (degradation, act this week). A third tier becomes noise that trains people to ignore everything.
+
+#### Apple (Xcode Organizer / App Store Connect)
+
+Apple provides built-in alerting for shipped apps:
+
+- **Xcode Organizer → Metrics** — launch time, hang rate, memory, disk writes (24h delay)
+- **App Store Connect → App Analytics** — crash rate, sessions, retention
+- **MetricKit diagnostic payloads** — crash, hang, disk-write reports delivered on-device
+- **Custom alerts** — process MetricKit payloads in `didReceive(_:)` and send to your backend
+
+Threshold approach is the same: alert on user-felt symptoms (hang rate > X%, crash-free sessions < Y%), not causes.
 
 ### 7. Verify the telemetry itself
 
@@ -199,5 +283,8 @@ After instrumenting a feature, confirm:
 - [ ] A single request can be followed end-to-end in the tracing UI without broken spans
 - [ ] Every new alert is symptom-based, has a runbook link, and was test-fired once
 - [ ] An induced failure in staging was located via telemetry alone, without reading the source
+- [ ] os.Logger calls use appropriate levels (.debug, .info, .error) and privacy qualifiers
+- [ ] OSSignposter intervals cover key user flows and appear in Instruments
+- [ ] MetricKit subscriber registered and diagnostic payloads forwarded to backend
 
 For the at-a-glance version of this list, including the pre-launch instrumentation gate, see `references/observability-checklist.md`.

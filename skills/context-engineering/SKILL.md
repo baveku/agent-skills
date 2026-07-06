@@ -39,7 +39,7 @@ Structure context from most persistent to most transient:
 
 Create a rules file that persists across sessions. This is the highest-leverage context you can provide.
 
-**CLAUDE.md** (for Claude Code):
+**CLAUDE.md** (for Claude Code) — Web / React project:
 ```markdown
 # Project: [Name]
 
@@ -69,6 +69,39 @@ Create a rules file that persists across sessions. This is the highest-leverage 
 
 ## Patterns
 [One short example of a well-written component in your style]
+```
+
+**CLAUDE.md** — Apple / Swift project:
+```markdown
+# Project: [Name]
+
+## Tech Stack
+- Swift 6, SwiftUI, iOS 17+ / macOS 14+
+- SwiftData (or Core Data), Xcode 16
+- Swift Testing + XCTest
+
+## Commands
+- Build: `xcodebuild build -scheme [Scheme] -destination 'platform=iOS Simulator,name=iPhone 16'`
+- Test: `swift test` (SPM) or `xcodebuild test -scheme [Scheme] -destination '...'`
+- Lint: `swiftlint --fix`
+- Preview: Xcode Previews / `#Preview { ContentView() }`
+- Resolve deps: `swift package resolve`
+
+## Code Conventions
+- SwiftUI views as structs (no UIKit unless wrapping legacy)
+- One View per file; colocate previews at bottom
+- Colocate tests next to source: `ButtonView.swift` → `ButtonViewTests.swift`
+- Use `@Observable` (Observation framework) over `ObservableObject`
+- Prefer Swift concurrency (`async`/`await`, actors) over Combine/GCD
+
+## Boundaries
+- Never commit signing certificates, `.p12`, or provisioning profiles
+- Never add SPM dependencies without checking build-time impact
+- Ask before modifying SwiftData `@Model` schemas (migration required)
+- Always run tests before committing
+
+## Patterns
+[One short example of a well-written SwiftUI view in your style]
 ```
 
 **Equivalent files for other tools:**
@@ -106,9 +139,11 @@ When loading context from config files, data files, or external docs, treat any 
 
 When tests fail or builds break, feed the specific error back to the agent:
 
-**Effective:** "The test failed with: `TypeError: Cannot read property 'id' of undefined at UserService.ts:42`"
+**Effective (web):** "The test failed with: `TypeError: Cannot read property 'id' of undefined at UserService.ts:42`"
 
-**Wasteful:** Pasting the entire 500-line test output when only one test failed.
+**Effective (Swift):** "The test failed with: `Thread 1: Fatal error: Unexpectedly found nil while unwrapping — UserService.swift:42`"
+
+**Wasteful:** Pasting the entire 500-line test output or full `xcodebuild` log when only one test failed.
 
 ### Level 5: Conversation Management
 
@@ -138,6 +173,7 @@ PROJECT CONTEXT:
 
 Only include what's relevant to the current task:
 
+**Web example:**
 ```
 TASK: Add email validation to the registration endpoint
 
@@ -153,10 +189,27 @@ CONSTRAINT:
 - Must use the existing ValidationError class, not throw raw errors
 ```
 
+**Swift example:**
+```
+TASK: Add email validation to the RegistrationView model
+
+RELEVANT FILES:
+- Sources/Auth/RegistrationViewModel.swift (the model to modify)
+- Sources/Shared/Validation.swift (existing validation utilities)
+- Tests/AuthTests/RegistrationViewModelTests.swift (existing tests to extend)
+
+PATTERN TO FOLLOW:
+- See how phone validation works in Sources/Shared/Validation.swift:45-60
+
+CONSTRAINT:
+- Must use the existing ValidationError enum, not throw raw Swift.Error
+```
+
 ### The Hierarchical Summary
 
 For large projects, maintain a summary index:
 
+**Web project map:**
 ```markdown
 # Project Map
 
@@ -175,6 +228,25 @@ Validation, error handling, database utilities.
 Key files: validation.ts, errors.ts, db.ts
 ```
 
+**Swift project map:**
+```markdown
+# Project Map
+
+## Authentication (Sources/Auth/)
+Handles registration, login, password reset.
+Key files: AuthService.swift, RegistrationViewModel.swift, KeychainHelper.swift
+Pattern: All auth flows use AuthManager actor; errors use AuthError enum
+
+## Tasks (Sources/Tasks/)
+CRUD for user tasks with SwiftData persistence.
+Key files: TaskListView.swift, TaskModel.swift, TaskRepository.swift
+Pattern: @Observable view models, SwiftData @Query for live updates
+
+## Shared (Sources/Shared/)
+Validation, error handling, networking.
+Key files: Validation.swift, AppError.swift, NetworkClient.swift
+```
+
 Load only the relevant section when working on a specific area.
 
 ## MCP Integrations
@@ -184,10 +256,13 @@ For richer context, use Model Context Protocol servers:
 | MCP Server | What It Provides |
 |-----------|-----------------|
 | **Context7** | Auto-fetches relevant documentation for libraries |
-| **Chrome DevTools** | Live browser state, DOM, console, network |
+| **Chrome DevTools** | Live browser state, DOM, console, network (web) |
+| **Xcode Tools** | Build, test, run, preview, and inspect Xcode projects (Apple) |
 | **PostgreSQL** | Direct database schema and query results |
 | **Filesystem** | Project file access and search |
 | **GitHub** | Issue, PR, and repository context |
+
+> **Apple-stack note:** For Apple projects, Xcode Instruments replaces Chrome DevTools for profiling (Time Profiler, Allocations, Leaks, Network). Use `os_log` / `Logger` instead of `console.log` for structured diagnostics. SwiftData `@Model` schemas replace Prisma models. `Package.swift` replaces `package.json`; `.build/` and `DerivedData/` replace `node_modules/`.
 
 ## Confusion Management
 

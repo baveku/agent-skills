@@ -1,11 +1,11 @@
 {
   "name": "agent-skills",
-  "description": "Production-grade engineering skills for AI coding agents — covering the full software development lifecycle from spec to ship.",
+  "description": "Production-grade engineering skills for AI coding agents, extended for web and mobile development.",
   "author": {
-    "name": "Addy Osmani"
+    "name": "baveku"
   },
-  "homepage": "https://github.com/addyosmani/agent-skills",
-  "repository": "https://github.com/addyosmani/agent-skills",
+  "homepage": "https://github.com/baveku/agent-skills",
+  "repository": "https://github.com/baveku/agent-skills",
   "license": "MIT",
   "commands": ["./.claude/commands", "./commands"],
   "skills": "./skills",

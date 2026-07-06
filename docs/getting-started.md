@@ -13,7 +13,7 @@ Each skill is a Markdown file (`SKILL.md`) that describes a specific engineering
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/addyosmani/agent-skills.git
+git clone https://github.com/baveku/agent-skills.git
 ```
 
 ### 2. Choose a skill
@@ -24,6 +24,12 @@ Browse the `skills/` directory. Each subdirectory contains a `SKILL.md` with:
 - **Verification** — how to confirm the work is done
 - **Common rationalizations** — excuses the agent might use to skip steps
 - **Red flags** — signs the skill is being violated
+
+For multi-platform work, classify the task before choosing a skill:
+
+1. Lifecycle: define, plan, build, verify, review, ship.
+2. Platform: web, iOS, Android, React Native, KMP, or shared backend/library.
+3. Surface: UI, API, persistence, native bridge, runtime verification, performance, security, accessibility, release.
 
 ### 3. Load the skill into your agent
 
@@ -37,7 +43,7 @@ Copy the relevant `SKILL.md` content into your agent's system prompt, rules file
 
 ### 4. Use the meta-skill for discovery
 
-Start with the `using-agent-skills` skill loaded. It contains a flowchart that maps task types to the appropriate skill.
+Start with the `using-agent-skills` skill loaded. It contains the lifecycle/platform/surface routing rules that map task types to the appropriate skill.
 
 ## Recommended Setup
 
@@ -66,7 +72,11 @@ Before deploy:       shipping-and-launch
 
 Don't load all skills at once — it wastes context. Load skills relevant to the current task:
 
-- Working on UI? Load `frontend-ui-engineering`
+- Working on web UI? Load `frontend-ui-engineering`
+- Working on SwiftUI? Load `swiftui-ui-patterns`, `swiftui-view-refactor`, or `swiftui-pro`
+- Verifying browser behavior? Load `browser-testing-with-devtools`
+- Verifying iOS behavior? Load `ios-debugger-agent` or `device-interaction`
+- Working on Android, React Native, or KMP? Use a platform-specific skill when present; otherwise load `source-driven-development` and the project's local platform docs
 - Debugging? Load `debugging-and-error-recovery`
 - Setting up CI? Load `ci-cd-and-automation`
 
@@ -96,13 +106,13 @@ The `agents/` directory contains pre-configured agent personas:
 | `code-reviewer.md` | Five-axis code review |
 | `test-engineer.md` | Test strategy and writing |
 | `security-auditor.md` | Vulnerability detection |
-| `web-performance-auditor.md` | Core Web Vitals & performance audit (via `/webperf`) |
+| `web-performance-auditor.md` | Core Web Vitals & performance audit for web apps |
 
 Load an agent definition when you need specialized review. For example, ask your coding agent to "review this change using the code-reviewer agent persona" and provide the agent definition.
 
 ## Using Commands
 
-The `.claude/commands/` directory contains slash commands for Claude Code:
+The `.claude/commands/` directory contains slash commands for Claude Code and other harnesses that support command files. Commands are convenience wrappers, not the only way to use the workflows.
 
 | Command | Skill Invoked |
 |---------|---------------|
@@ -115,6 +125,20 @@ The `.claude/commands/` directory contains slash commands for Claude Code:
 | `/code-simplify` | code-simplification |
 | `/ship` | shipping-and-launch |
 | `/webperf` | web-performance-auditor (specialist agent, web apps only) |
+
+### Commandless equivalents
+
+If your agent platform does not support slash commands, use natural language. `AGENTS.md` and `using-agent-skills` provide the routing rules.
+
+| Instead of | Say |
+|------------|-----|
+| `/spec` | "Define this feature with a spec first." |
+| `/plan` | "Break this spec into small verifiable tasks." |
+| `/build` | "Build the next slice using the repo workflow." |
+| `/test` | "Write the failing test first, then make it pass." |
+| `/review` | "Review this change across correctness, architecture, security, and performance." |
+| `/ship` | "Ship-check this production change with rollback planning." |
+| `/webperf` | "Audit this web page's Core Web Vitals." |
 
 > **Note:** When installed as a Claude Code plugin you may see a warning like
 > _"Default commands/ folder is ignored because the manifest sets 'commands'"_.
@@ -137,7 +161,7 @@ Load a reference when you need detailed patterns beyond what the skill covers.
 
 ## Spec and task artifacts
 
-The `/spec` and `/plan` commands create working artifacts (`SPEC.md`, `tasks/plan.md`, `tasks/todo.md`). Treat them as **living documents** while the work is in progress:
+The spec and planning workflows create working artifacts (`SPEC.md`, `tasks/plan.md`, `tasks/todo.md`) whether they were started by slash command or natural language. Treat them as **living documents** while the work is in progress:
 
 - Keep them in version control during development so the human and the agent have a shared source of truth.
 - Update them when scope or decisions change.

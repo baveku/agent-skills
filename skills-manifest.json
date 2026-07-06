@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "description": "External skill sources for manually updating vendored skills in this repo. Fixed local sources are intentionally excluded.",
+  "cache_dir": ".skills-cache",
+  "sources": [
+    {
+      "name": "twostraws-swiftui",
+      "type": "git",
+      "repo": "https://github.com/twostraws/SwiftUI-Agent-Skill.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "swiftui-pro", "dest": "swiftui-pro" }
+      ]
+    },
+    {
+      "name": "twostraws-swiftdata",
+      "type": "git",
+      "repo": "https://github.com/twostraws/SwiftData-Agent-Skill.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "swiftdata-pro", "dest": "swiftdata-pro" }
+      ]
+    },
+    {
+      "name": "twostraws-concurrency",
+      "type": "git",
+      "repo": "https://github.com/twostraws/Swift-Concurrency-Agent-Skill.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "swift-concurrency-pro", "dest": "swift-concurrency-pro" }
+      ]
+    },
+    {
+      "name": "twostraws-testing",
+      "type": "git",
+      "repo": "https://github.com/twostraws/Swift-Testing-Agent-Skill.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "swift-testing-pro", "dest": "swift-testing-pro" }
+      ]
+    },
+    {
+      "name": "dimillian",
+      "type": "git",
+      "repo": "https://github.com/Dimillian/Skills.git",
+      "branch": "main",
+      "skills_path": ".",
+      "skills": [
+        { "src": "bug-hunt-swarm", "dest": "bug-hunt-swarm" },
+        { "src": "github", "dest": "github-cli" },
+        { "src": "ios-debugger-agent", "dest": "ios-debugger-agent" },
+        { "src": "macos-spm-app-packaging", "dest": "macos-spm-packaging" },
+        { "src": "review-swarm", "dest": "review-swarm" },
+        { "src": "swift-concurrency-expert", "dest": "swift-concurrency-expert" },
+        { "src": "swiftui-liquid-glass", "dest": "swiftui-liquid-glass" },
+        { "src": "swiftui-performance-audit", "dest": "swiftui-performance-audit" },
+        { "src": "swiftui-ui-patterns", "dest": "swiftui-ui-patterns" },
+        { "src": "swiftui-view-refactor", "dest": "swiftui-view-refactor" }
+      ]
+    },
+    {
+      "name": "ios-accessibility",
+      "type": "git",
+      "repo": "https://github.com/dadederk/iOS-Accessibility-Agent-Skill.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "ios-accessibility", "dest": "ios-accessibility" }
+      ]
+    },
+    {
+      "name": "apple-accessibility",
+      "type": "git",
+      "repo": "https://github.com/rgmez/apple-accessibility-skills.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "swiftui-accessibility-auditor", "dest": "swiftui-accessibility-auditor" },
+        { "src": "uikit-accessibility-auditor", "dest": "uikit-accessibility-auditor" }
+      ]
+    },
+    {
+      "name": "appstore-connect-cli",
+      "type": "git",
+      "repo": "https://github.com/rudrankriyam/app-store-connect-cli-skills.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "asc-release-flow", "dest": "asc-release-flow" },
+        { "src": "asc-testflight-orchestration", "dest": "asc-testflight-orchestration" },
+        { "src": "asc-signing-setup", "dest": "asc-signing-setup" },
+        { "src": "asc-submission-health", "dest": "asc-submission-health" },
+        { "src": "asc-crash-triage", "dest": "asc-crash-triage" },
+        { "src": "asc-cli-usage", "dest": "asc-cli-usage" },
+        { "src": "asc-xcode-build", "dest": "asc-xcode-build" }
+      ]
+    },
+    {
+      "name": "appstore-review",
+      "type": "git",
+      "repo": "https://github.com/3paws-ai/mobile-ai-skills.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "appstore-review", "dest": "appstore-review" }
+      ]
+    },
+    {
+      "name": "appstore-aso",
+      "type": "git",
+      "repo": "https://github.com/timbroddin/app-store-aso-skill.git",
+      "branch": "main",
+      "skills_path": ".",
+      "skills": [
+        { "src": ".", "dest": "appstore-aso" }
+      ]
+    },
+    {
+      "name": "swift-security",
+      "type": "git",
+      "repo": "https://github.com/ivan-magda/swift-security-skill.git",
+      "branch": "main",
+      "skills_path": ".",
+      "skills": [
+        { "src": "swift-security-expert", "dest": "swift-security-expert" }
+      ]
+    },
+    {
+      "name": "swift-architecture",
+      "type": "git",
+      "repo": "https://github.com/efremidze/swift-architecture-skill.git",
+      "branch": "main",
+      "skills_path": ".",
+      "skills": [
+        { "src": "swift-architecture-skill", "dest": "swift-architecture" }
+      ]
+    }
+  ]
+}

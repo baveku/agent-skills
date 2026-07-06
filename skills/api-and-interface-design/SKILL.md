@@ -38,6 +38,8 @@ Avoid forcing consumers to choose between multiple versions of the same dependen
 
 Define the interface before implementing it. The contract is the spec — implementation follows.
 
+#### Web (TypeScript)
+
 ```typescript
 // Define the contract first
 interface TaskAPI {
@@ -58,9 +60,24 @@ interface TaskAPI {
 }
 ```
 
+#### Apple (Swift)
+
+```swift
+// Define the contract first via protocol
+protocol TaskAPI {
+    func createTask(_ input: CreateTaskInput) async throws -> Task
+    func listTasks(_ params: ListTasksParams) async throws -> PaginatedResult<Task>
+    func getTask(id: String) async throws -> Task
+    func updateTask(id: String, input: UpdateTaskInput) async throws -> Task
+    func deleteTask(id: String) async throws
+}
+```
+
 ### 2. Consistent Error Semantics
 
 Pick one error strategy and use it everywhere:
+
+#### Web (TypeScript)
 
 ```typescript
 // REST: HTTP status codes + structured error body
@@ -83,11 +100,37 @@ interface APIError {
 // 500 → Server error (never expose internal details)
 ```
 
+#### Apple (Swift)
+
+```swift
+enum APIError: Error, LocalizedError {
+    case validationFailed(field: String, message: String)
+    case notAuthenticated
+    case notAuthorized
+    case notFound(resource: String, id: String)
+    case conflict(reason: String)
+    case serverError
+
+    var errorDescription: String? {
+        switch self {
+        case .validationFailed(_, let message): message
+        case .notAuthenticated: "Authentication required"
+        case .notAuthorized: "Insufficient permissions"
+        case .notFound(let resource, let id): "\(resource) \(id) not found"
+        case .conflict(let reason): reason
+        case .serverError: "Internal server error"
+        }
+    }
+}
+```
+
 **Don't mix patterns.** If some endpoints throw, others return null, and others return `{ error }` — the consumer can't predict behavior.
 
 ### 3. Validate at Boundaries
 
 Trust internal code. Validate at system edges where external input enters:
+
+#### Web (TypeScript)
 
 ```typescript
 // Validate at the API boundary
@@ -109,6 +152,32 @@ app.post('/api/tasks', async (req, res) => {
 });
 ```
 
+#### Apple (Swift)
+
+```swift
+// Validate at the API boundary via Codable + custom init
+struct CreateTaskRequest: Decodable {
+    let title: String
+    let description: String?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let rawTitle = try container.decode(String.self, forKey: .title)
+        guard !rawTitle.trimmingCharacters(in: .whitespaces).isEmpty else {
+            throw APIError.validationFailed(field: "title", message: "Title is required")
+        }
+        self.title = rawTitle
+        self.description = try container.decodeIfPresent(String.self, forKey: .description)
+    }
+}
+
+// After validation, internal code trusts the types
+func handleCreateTask(_ data: Data) async throws -> Task {
+    let input = try JSONDecoder().decode(CreateTaskRequest.self, from: data)
+    return try await taskService.create(input)
+}
+```
+
 Where validation belongs:
 - API route handlers (user input)
 - Form submission handlers (user input)
@@ -126,6 +195,8 @@ Where validation does NOT belong:
 
 Extend interfaces without breaking existing consumers:
 
+#### Web (TypeScript)
+
 ```typescript
 // Good: Add optional fields
 interface CreateTaskInput {
@@ -140,6 +211,30 @@ interface CreateTaskInput {
   title: string;
   // description: string;  // Removed — breaks existing consumers
   priority: number;         // Changed from string — breaks existing consumers
+}
+```
+
+#### Apple (Swift)
+
+```swift
+// Good: Add optional properties with defaults
+struct CreateTaskInput {
+    let title: String
+    var description: String? = nil
+    var priority: Priority = .medium  // Added later, has default
+    var labels: [String] = []         // Added later, has default
+}
+
+// Good: Extend protocol without breaking existing conformances
+protocol TaskAPI {
+    func createTask(_ input: CreateTaskInput) async throws -> Task
+}
+
+extension TaskAPI {
+    // Default implementation — existing conformances don't break
+    func createTask(_ input: CreateTaskInput, options: TaskOptions = .default) async throws -> Task {
+        try await createTask(input)
+    }
 }
 ```
 
@@ -259,6 +354,60 @@ type UserId = string & { readonly __brand: 'UserId' };
 function getTask(id: TaskId): Promise<Task> { ... }
 ```
 
+## Swift Interface Patterns
+
+### Use Enums with Associated Values for Variants
+
+```swift
+enum TaskStatus {
+    case pending
+    case inProgress(assignee: String, startedAt: Date)
+    case completed(completedAt: Date, completedBy: String)
+    case cancelled(reason: String, cancelledAt: Date)
+}
+
+func statusLabel(_ status: TaskStatus) -> String {
+    switch status {
+    case .pending: "Pending"
+    case .inProgress(let assignee, _): "In progress (\(assignee))"
+    case .completed(let date, _): "Done on \(date.formatted())"
+    case .cancelled(let reason, _): "Cancelled: \(reason)"
+    }
+}
+```
+
+### Input/Output Separation
+
+```swift
+struct CreateTaskInput: Encodable {
+    let title: String
+    var description: String? = nil
+}
+
+struct Task: Decodable, Identifiable {
+    let id: UUID
+    let title: String
+    let description: String?
+    let createdAt: Date
+    let updatedAt: Date
+    let createdBy: String
+}
+```
+
+### Use Type-Safe ID Wrappers
+
+```swift
+struct TaskID: RawRepresentable, Hashable, Codable {
+    let rawValue: String
+}
+struct UserID: RawRepresentable, Hashable, Codable {
+    let rawValue: String
+}
+
+// Prevents accidentally passing a UserID where a TaskID is expected
+func getTask(id: TaskID) async throws -> Task { ... }
+```
+
 ## Common Rationalizations
 
 | Rationalization | Reality |
@@ -292,3 +441,6 @@ After designing an API:
 - [ ] New fields are additive and optional (backward compatible)
 - [ ] Naming follows consistent conventions across all endpoints
 - [ ] API documentation or types are committed alongside the implementation
+- [ ] Swift protocols define all public contracts
+- [ ] Codable conformance tested with edge-case JSON
+- [ ] Enums with associated values preferred over stringly-typed status fields
