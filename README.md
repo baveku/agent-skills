@@ -85,19 +85,19 @@ Copy any `SKILL.md` into `.cursor/rules/`, or reference the full `skills/` direc
 <details>
 <summary><b>Antigravity CLI</b></summary>
 
-Install the Antigravity-only plugin package from `antigravity/`. Antigravity generates slash commands from markdown skill aliases, not TOML command files. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
+Install the repo root as the Antigravity plugin. Antigravity generates slash commands from markdown skill aliases, not TOML command files. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
+
+**Install from the repo:**
+
+```bash
+agy plugin install https://github.com/baveku/agent-skills.git
+```
 
 **Install from a local clone:**
 
 ```bash
 git clone https://github.com/baveku/agent-skills.git
-agy plugin install ./agent-skills/antigravity
-```
-
-**Validate locally:**
-
-```bash
-agy plugin validate ./agent-skills/antigravity
+agy plugin install ./agent-skills
 ```
 
 </details>
@@ -152,7 +152,7 @@ Use agent definitions from `agents/` as Copilot personas and skill content in `.
 <details>
 <summary><b>Codex / Other Agents</b></summary>
 
-Skills are plain Markdown - they work with any agent that accepts system prompts or instruction files. See [docs/getting-started.md](docs/getting-started.md).
+Skills are plain Markdown - they work with any agent that accepts system prompts or instruction files. For Codex-style skill loading without Antigravity slash aliases, point at `codex/skills/`. See [docs/getting-started.md](docs/getting-started.md).
 
 </details>
 
@@ -321,11 +321,11 @@ agent-skills/
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 8 slash commands (Claude Code)
 ├── .gemini/commands/                  # 8 legacy slash commands (Gemini CLI)
+├── skills/<alias>/SKILL.md            # Antigravity skill-generated slash command aliases
+├── claude/skills/                     # Alias-free skill view for Claude plugin installs
+├── codex/skills/                      # Alias-free skill view for Codex-style installs
 ├── rules/                             # Antigravity always-on routing rules
-├── antigravity/                       # Antigravity plugin package
-│   ├── plugin.json                    # Antigravity plugin manifest
-│   ├── skills/<alias>/SKILL.md        # Antigravity slash command aliases
-│   └── rules/                         # Antigravity routing rules
+├── plugin.json                        # Antigravity plugin manifest
 └── docs/                              # Setup guides per tool
 ```
 
