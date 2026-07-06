@@ -1,22 +1,16 @@
 # Using agent-skills with Antigravity CLI (agy)
 
-The `agent-skills` package installs as an Antigravity CLI plugin. Current Antigravity plugins are skill-first: plugin slash commands are generated from markdown skills, not from TOML command files.
+The `agent-skills` repo includes an Antigravity-only plugin package under `antigravity/`. Current Antigravity plugins are skill-first: plugin slash commands are generated from markdown skills, not from TOML command files.
 
 Official reference: https://antigravity.google/docs/cli/plugins
 
 ## Setup
 
-### Install from the remote repository
-
-```bash
-agy plugin install https://github.com/baveku/agent-skills.git
-```
-
 ### Install from a local clone
 
 ```bash
 git clone https://github.com/baveku/agent-skills.git
-agy plugin install /path/to/agent-skills
+agy plugin install /path/to/agent-skills/antigravity
 ```
 
 Installed plugins are staged under:
@@ -33,13 +27,12 @@ agy plugin list
 
 ## Plugin Layout
 
-Antigravity expects a root `plugin.json` plus optional component directories:
+Antigravity expects a plugin root with `plugin.json` plus optional component directories. For this repo, that plugin root is `antigravity/`:
 
 ```text
-agent-skills/
+agent-skills/antigravity/
 ├── plugin.json
 ├── skills/
-├── agents/
 ├── rules/
 ├── hooks.json
 ├── mcp_config.json
@@ -48,28 +41,27 @@ agent-skills/
 
 This repo currently provides:
 
-- `plugin.json` — Antigravity plugin identity.
-- `rules/skill-routing.md` — always-on routing policy for lifecycle, platform, and surface selection.
-- `skills/<name>/SKILL.md` — core workflow skills used by agents.
-- `skills/<alias>/SKILL.md` — Antigravity slash aliases such as `/spec`, `/planning`, `/build`, `/test`, `/review`, `/code-simplify`, `/ship`, and `/webperf`.
-- `agents/` — reusable subagent personas.
+- `antigravity/plugin.json` — Antigravity plugin identity.
+- `antigravity/rules/skill-routing.md` — always-on routing policy for lifecycle, platform, and surface selection.
+- `antigravity/skills/<name>/SKILL.md` — core workflow skills, linked back to the repo's root `skills/` directory.
+- `antigravity/skills/<alias>/SKILL.md` — Antigravity-only slash aliases such as `/spec`, `/planning`, `/build`, `/test`, `/review`, `/code-simplify`, `/ship`, and `/webperf`.
 
 There is intentionally no `commands/*.toml` directory for Antigravity.
 
 ## Slash Commands
 
-Antigravity converts markdown skills into slash commands automatically. The lifecycle aliases in `skills/<alias>/SKILL.md` map short command names to the underlying production workflows:
+Antigravity converts markdown skills into slash commands automatically. The lifecycle aliases in `antigravity/skills/<alias>/SKILL.md` map short command names to the underlying production workflows:
 
 | Slash command | Alias skill | Core workflow |
 | --- | --- | --- |
-| `/spec` | `skills/spec/SKILL.md` | `spec-driven-development` |
-| `/planning` | `skills/planning/SKILL.md` | `planning-and-task-breakdown` |
-| `/build` | `skills/build/SKILL.md` | `incremental-implementation` + `test-driven-development` |
-| `/test` | `skills/test/SKILL.md` | `test-driven-development` |
-| `/review` | `skills/review/SKILL.md` | `code-review-and-quality` |
-| `/code-simplify` | `skills/code-simplify/SKILL.md` | `code-simplification` |
-| `/ship` | `skills/ship/SKILL.md` | `shipping-and-launch` |
-| `/webperf` | `skills/webperf/SKILL.md` | `web-performance-auditor` persona |
+| `/spec` | `antigravity/skills/spec/SKILL.md` | `spec-driven-development` |
+| `/planning` | `antigravity/skills/planning/SKILL.md` | `planning-and-task-breakdown` |
+| `/build` | `antigravity/skills/build/SKILL.md` | `incremental-implementation` + `test-driven-development` |
+| `/test` | `antigravity/skills/test/SKILL.md` | `test-driven-development` |
+| `/review` | `antigravity/skills/review/SKILL.md` | `code-review-and-quality` |
+| `/code-simplify` | `antigravity/skills/code-simplify/SKILL.md` | `code-simplification` |
+| `/ship` | `antigravity/skills/ship/SKILL.md` | `shipping-and-launch` |
+| `/webperf` | `antigravity/skills/webperf/SKILL.md` | `web-performance-auditor` persona |
 
 Use `/planning` instead of `/plan` because `/plan` may be reserved by the host.
 
@@ -100,11 +92,11 @@ Apple-platform work should prefer Apple-specific skills such as `swiftui-ui-patt
 Validate the plugin locally with:
 
 ```bash
-agy plugin validate /path/to/agent-skills
+agy plugin validate /path/to/agent-skills/antigravity
 ```
 
 ## Notes
 
 - Antigravity `plugin.json` supports only plugin identity metadata (`name`, `description`, and optional `$schema`).
-- Do not add Antigravity TOML command files; use `skills/<alias>/SKILL.md` aliases instead.
+- Do not add Antigravity TOML command files; use `antigravity/skills/<alias>/SKILL.md` aliases instead.
 - For persistent project-level routing, copy or link `AGENTS.md` into the workspace root.

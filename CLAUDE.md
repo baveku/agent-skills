@@ -9,7 +9,7 @@ skills/       → Core skills (SKILL.md per directory)
 agents/       → Reusable agent personas (code-reviewer, test-engineer, security-auditor, web-performance-auditor)
 hooks/        → Session lifecycle hooks
 .claude/commands/ → Claude Code slash commands (/spec, /plan, /build, /test, /review, /code-simplify, /ship; plus /webperf specialist audit)
-skills/<alias>/SKILL.md → Antigravity skill aliases that generate slash commands
+antigravity/skills/<alias>/SKILL.md → Antigravity-only skill aliases that generate slash commands
 references/   → Supplementary checklists (testing, performance, security, accessibility, observability)
 docs/         → Setup guides for different tools
 ```

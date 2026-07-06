@@ -85,19 +85,19 @@ Copy any `SKILL.md` into `.cursor/rules/`, or reference the full `skills/` direc
 <details>
 <summary><b>Antigravity CLI</b></summary>
 
-Install as a native plugin for skills and subagents. Antigravity generates slash commands from markdown skill files, not TOML command files. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
-
-**Install from the repo:**
-
-```bash
-agy plugin install https://github.com/baveku/agent-skills.git
-```
+Install the Antigravity-only plugin package from `antigravity/`. Antigravity generates slash commands from markdown skill aliases, not TOML command files. See [docs/antigravity-setup.md](docs/antigravity-setup.md).
 
 **Install from a local clone:**
 
 ```bash
 git clone https://github.com/baveku/agent-skills.git
-agy plugin install ./agent-skills
+agy plugin install ./agent-skills/antigravity
+```
+
+**Validate locally:**
+
+```bash
+agy plugin validate ./agent-skills/antigravity
 ```
 
 </details>
@@ -321,9 +321,11 @@ agent-skills/
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 8 slash commands (Claude Code)
 ├── .gemini/commands/                  # 8 legacy slash commands (Gemini CLI)
-├── skills/<alias>/SKILL.md            # Antigravity skill-generated slash command aliases
 ├── rules/                             # Antigravity always-on routing rules
-├── plugin.json                        # Antigravity plugin manifest
+├── antigravity/                       # Antigravity plugin package
+│   ├── plugin.json                    # Antigravity plugin manifest
+│   ├── skills/<alias>/SKILL.md        # Antigravity slash command aliases
+│   └── rules/                         # Antigravity routing rules
 └── docs/                              # Setup guides per tool
 ```
 
