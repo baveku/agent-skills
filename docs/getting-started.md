@@ -111,7 +111,7 @@ Load an agent definition when you need specialized review. For example, ask your
 
 ## Using Commands
 
-The `.claude/commands/` directory contains slash commands for Claude Code. Antigravity slash entries are generated from markdown skill aliases in `skills/*.md`. Commands are convenience wrappers, not the only way to use the workflows.
+The `.claude/commands/` directory contains slash commands for Claude Code. Antigravity slash entries are generated from markdown skill aliases in `skills/<alias>/SKILL.md`. Commands are convenience wrappers, not the only way to use the workflows.
 
 | Command | Skill Invoked |
 |---------|---------------|

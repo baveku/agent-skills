@@ -8,7 +8,7 @@
  *   .gemini/commands/  (.toml — legacy Gemini CLI)
  *
  * Antigravity CLI no longer uses TOML command files. Antigravity slash entries
- * are generated from markdown skill files under skills/*.md.
+ * are generated from markdown skill files under skills/<alias>/SKILL.md.
  *
  * Checks (errors block CI):
  *   - Every command present in one directory exists in all three

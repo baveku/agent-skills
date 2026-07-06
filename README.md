@@ -321,7 +321,8 @@ agent-skills/
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 8 slash commands (Claude Code)
 ├── .gemini/commands/                  # 8 legacy slash commands (Gemini CLI)
-├── skills/*.md                        # 8 Antigravity skill-generated slash command aliases
+├── skills/<alias>/SKILL.md            # Antigravity skill-generated slash command aliases
+├── rules/                             # Antigravity always-on routing rules
 ├── plugin.json                        # Antigravity plugin manifest
 └── docs/                              # Setup guides per tool
 ```
