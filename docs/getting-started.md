@@ -25,10 +25,10 @@ Browse the `skills/` directory. Each subdirectory contains a `SKILL.md` with:
 - **Common rationalizations** — excuses the agent might use to skip steps
 - **Red flags** — signs the skill is being violated
 
-For multi-platform work, classify the task before choosing a skill:
+For platform-aware work, classify the task before choosing a skill:
 
 1. Lifecycle: define, plan, build, verify, review, ship.
-2. Platform: web, iOS, Android, React Native, KMP, or shared backend/library.
+2. Platform: web, Apple platform, or shared backend/library.
 3. Surface: UI, API, persistence, native bridge, runtime verification, performance, security, accessibility, release.
 
 ### 3. Load the skill into your agent
@@ -76,7 +76,6 @@ Don't load all skills at once — it wastes context. Load skills relevant to the
 - Working on SwiftUI? Load `swiftui-ui-patterns`, `swiftui-view-refactor`, or `swiftui-pro`
 - Verifying browser behavior? Load `browser-testing-with-devtools`
 - Verifying iOS behavior? Load `ios-debugger-agent` or `device-interaction`
-- Working on Android, React Native, or KMP? Use a platform-specific skill when present; otherwise load `source-driven-development` and the project's local platform docs
 - Debugging? Load `debugging-and-error-recovery`
 - Setting up CI? Load `ci-cd-and-automation`
 

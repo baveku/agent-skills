@@ -12,7 +12,6 @@ Before implementing, classify the task by platform and surface, then invoke the 
 | SwiftUI screen, navigation, state, or layout | `swiftui-ui-patterns` |
 | SwiftUI refactor or large view cleanup | `swiftui-view-refactor` |
 | Swift concurrency / SwiftData / Apple security | `swift-concurrency-pro`, `swiftdata-pro`, or `swift-security-expert` as applicable |
-| Android, React Native, or KMP | platform-specific skill if present; otherwise use `source-driven-development` plus local project docs |
 | Runtime UI verification needed | web: `browser-testing-with-devtools`; iOS: `ios-debugger-agent` or `device-interaction` |
 
 Use at most one lifecycle skill, one platform/domain skill, and one verification skill unless the task is explicitly production-bound or cross-cutting.
@@ -29,7 +28,7 @@ Use at most one lifecycle skill, one platform/domain skill, and one verification
 Pick the next pending task from the plan. Then:
 
 1. Read the task's acceptance criteria
-2. Classify lifecycle, platform, and surface; load the matching platform skill if one exists
+2. Classify lifecycle, platform, and surface; load the matching web or Apple-platform skill if one exists
 3. Load relevant context (existing code, patterns, types)
 4. Write a failing test for the expected behavior (RED)
 5. Implement the minimum code to pass the test (GREEN)

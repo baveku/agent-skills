@@ -6,7 +6,7 @@ Invoke the agent-skills:shipping-and-launch skill.
 
 `/ship` is a **fan-out orchestrator**. It runs three specialist personas in parallel against the current change, then merges their reports into a single go/no-go decision with a rollback plan. The personas operate independently — no shared state, no ordering — which is what makes parallel execution safe and useful here.
 
-Before fan-out, classify the release platform: web, iOS, Android, React Native, KMP, or shared backend/library. Use the platform classification to decide which extra checks the main merge phase must run after the three reports return.
+Before fan-out, classify the release platform: web, Apple platform, or shared backend/library. Use the platform classification to decide which extra checks the main merge phase must run after the three reports return.
 
 ## Phase A — Parallel fan-out
 
@@ -36,14 +36,12 @@ Once all three reports are back, the main agent (not a sub-persona) synthesizes 
 3. **Performance** — Pull from `code-reviewer`'s performance axis, then apply platform-specific checks:
    - Web: Core Web Vitals via `/webperf` or `performance-optimization` when evidence exists.
    - SwiftUI/iOS: `swiftui-performance-audit` or Instruments/MetricKit evidence when relevant.
-   - Android, React Native, KMP: platform-specific performance skill if present; otherwise require project-local performance evidence.
 4. **Accessibility** — Apply platform-specific accessibility checks:
    - Web: keyboard navigation, screen reader support, contrast.
    - SwiftUI/iOS: `swiftui-accessibility-auditor` or `ios-accessibility` when available.
-   - Android/RN/KMP: platform accessibility checklist or project-local guidance.
 5. **Infrastructure** — Env vars, migrations, monitoring, feature flags. Verify directly.
 6. **Documentation** — README, ADRs, changelog. Verify directly.
-7. **Runtime verification** — Web uses `browser-testing-with-devtools`; iOS uses `ios-debugger-agent` or `device-interaction`; Android/RN/KMP use platform-specific tooling when present, otherwise project-local smoke tests.
+7. **Runtime verification** — Web uses `browser-testing-with-devtools`; Apple platforms use `ios-debugger-agent`, `device-interaction`, Xcode build/test commands, or the relevant App Store Connect skills when release flow is involved.
 
 ## Phase C — Decision and rollback
 

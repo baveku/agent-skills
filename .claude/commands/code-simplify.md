@@ -4,6 +4,15 @@ description: Simplify code for clarity and maintainability — reduce complexity
 
 Invoke the agent-skills:code-simplification skill.
 
+Before simplifying, classify the code surface and add the most specific Apple-platform skill when relevant:
+
+| Scope | Add this skill |
+| --- | --- |
+| SwiftUI view decomposition, state ownership, or layout cleanup | `swiftui-view-refactor` |
+| SwiftUI code quality review after simplification | `swiftui-pro` |
+| Swift concurrency or actor isolation cleanup | `swift-concurrency-pro` |
+| SwiftData model/query cleanup | `swiftdata-pro` |
+
 Simplify recently changed code (or the specified scope) while preserving exact behavior:
 
 1. Read CLAUDE.md and study project conventions

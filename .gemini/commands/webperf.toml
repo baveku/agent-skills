@@ -1,7 +1,15 @@
 description = "Run a web performance audit via the web-performance-auditor persona"
 
 prompt = """
-/webperf targets web applications specifically. Do not use it for utility libraries, CLIs, or server-only code with no browser-facing output.
+/webperf targets web applications specifically: browser-rendered pages, SPAs, SSR/SSG apps, and webviews where Core Web Vitals apply. Do not use it for utility libraries, CLIs, server-only code, native SwiftUI/UIKit, or Apple-platform screens that do not render through a browser/webview.
+
+For non-web Apple-platform work:
+
+| Platform | Use instead |
+| --- | --- |
+| SwiftUI/iOS performance | `swiftui-performance-audit` |
+| iOS runtime verification | `ios-debugger-agent` or `device-interaction` |
+| General native performance | `performance-optimization` |
 
 ## Determine the mode
 

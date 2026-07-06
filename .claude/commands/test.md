@@ -12,7 +12,6 @@ Classify the platform before choosing extra verification skills:
 | iOS simulator/device behavior | `ios-debugger-agent` or `device-interaction` |
 | Swift Testing test authoring/review | `swift-testing-pro` |
 | Swift concurrency tests | `swift-concurrency-pro` |
-| Android, React Native, or KMP | platform-specific skill if present; otherwise use project-local test commands plus `source-driven-development` |
 
 For new features:
 1. Write tests that describe the expected behavior (they should FAIL)

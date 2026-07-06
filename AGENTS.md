@@ -34,7 +34,7 @@ The agent should automatically map user intent to skills:
 Classify every engineering request in this order:
 
 1. **Lifecycle** — define, plan, build, verify, review, ship
-2. **Platform** — web, iOS, Android, React Native, Kotlin Multiplatform (KMP), or shared backend/library
+2. **Platform** — web, Apple platforms (iOS, macOS, watchOS, tvOS), or shared backend/library
 3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release
 
 Use the most specific available skill before a generic skill:
@@ -49,11 +49,8 @@ Use the most specific available skill before a generic skill:
 | iOS accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | `frontend-ui-engineering` accessibility rules |
 | iOS runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands from the project |
 | Swift concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | `security-and-hardening` for general security |
-| Android UI/runtime | `android-*` skills when present | `source-driven-development` + project-local Android docs |
-| React Native UI/runtime | `react-native-*` skills when present | `frontend-ui-engineering` + platform runtime verification |
-| KMP shared logic | `kmp-*` skills when present | `api-and-interface-design` + `test-driven-development` |
 
-Do not invent missing skills. If a platform-specific skill is not present, use the generic lifecycle skill plus `source-driven-development` and the project's local commands.
+Android, React Native, and KMP are future expansion targets, not current production routing targets. Do not invent missing skills for them; use the generic lifecycle skill plus `source-driven-development` and the project's local commands.
 
 ### Skill Selection Limits
 

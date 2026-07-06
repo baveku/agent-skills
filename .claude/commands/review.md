@@ -16,7 +16,6 @@ Before reviewing, classify the platform and add the most specific review skill:
 | Apple security, Keychain, CryptoKit, ATS, entitlements | `swift-security-expert` |
 | Web security | `security-and-hardening` |
 | Web performance / Core Web Vitals | `/webperf` or `performance-optimization` |
-| Android, React Native, or KMP | platform-specific review skill if present; otherwise use `source-driven-development` plus project-local docs |
 
 Review the current changes (staged or recent commits) across all five axes:
 

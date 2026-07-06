@@ -64,7 +64,7 @@ OpenCode agents are instructed (via `AGENTS.md`) to:
 The agent evaluates every request and maps it to the appropriate skill by classifying:
 
 1. Lifecycle: define, plan, build, verify, review, ship.
-2. Platform: web, iOS, Android, React Native, KMP, or shared backend/library.
+2. Platform: web, Apple platform, or shared backend/library.
 3. Surface: UI, API, persistence, runtime verification, performance, security, accessibility, release.
 
 Examples:
@@ -76,7 +76,6 @@ Examples:
 - "build this SwiftUI screen" → `incremental-implementation` + `swiftui-ui-patterns`
 - "verify this web UI bug in the browser" → `debugging-and-error-recovery` + `browser-testing-with-devtools`
 - "audit this SwiftUI scrolling performance" → `swiftui-performance-audit`
-- "change KMP shared models" → `api-and-interface-design` + `test-driven-development`, or a `kmp-*` skill if one exists
 
 The user does **not** need to explicitly request skills.
 
@@ -93,7 +92,7 @@ The development lifecycle is encoded implicitly:
 
 This replaces slash commands like `/spec`, `/plan`, etc.
 
-Platform-specific skills override generic skills. For example, SwiftUI performance uses `swiftui-performance-audit` before `performance-optimization`, and browser runtime verification uses `browser-testing-with-devtools` before generic test guidance. If Android, React Native, or KMP-specific skills are not present, the agent should use `source-driven-development` plus the project's local build/test docs rather than inventing a missing skill.
+Platform-specific skills override generic skills. For example, SwiftUI performance uses `swiftui-performance-audit` before `performance-optimization`, and browser runtime verification uses `browser-testing-with-devtools` before generic test guidance. Android, React Native, and KMP are future expansion targets, not current production routing targets.
 
 ---
 
@@ -174,7 +173,6 @@ Just use natural language:
 - "Review this"
 - "Build this SwiftUI screen"
 - "Verify this web flow in the browser"
-- "Update this KMP shared API and tests"
 
 The agent will automatically select and execute the correct skills.
 

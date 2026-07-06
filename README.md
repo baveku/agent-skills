@@ -1,10 +1,10 @@
 # Agent Skills
 
-**Production-grade engineering skills for AI coding agents, extended for mobile development.**
+**Production-grade engineering skills for AI coding agents, extended for Apple-platform development.**
 
-This is a fork of [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) that keeps the original production engineering lifecycle and adds stronger support for mobile development across iOS/SwiftUI, Android, React Native, and Kotlin Multiplatform (KMP).
+This is a fork of [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) that keeps the original production engineering lifecycle and adds stronger support for Apple-platform development across iOS, macOS, SwiftUI, Swift concurrency, SwiftData, App Store Connect, and simulator/device verification.
 
-Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. They are packaged so AI agents follow them consistently across web, backend, and mobile development.
+Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. They are packaged so AI agents follow them consistently across web, backend, and Apple-platform development.
 
 ```
   DEFINE          PLAN           BUILD          VERIFY         REVIEW          SHIP
@@ -36,16 +36,15 @@ Want fewer manual steps once the spec exists? **`/build auto`** generates the pl
 
 Skills also activate automatically based on what you're doing. Web UI triggers `frontend-ui-engineering`; SwiftUI work prefers `swiftui-ui-patterns`, `swiftui-view-refactor`, or `swiftui-pro`; platform gaps fall back to `source-driven-development` plus local project docs.
 
-### Mobile development support
+### Apple-platform development support
 
 This fork adds platform-aware routing for:
 
 - **iOS / SwiftUI** — SwiftUI UI patterns, view refactors, performance audits, accessibility, Swift concurrency, SwiftData, Apple security, simulator/device verification.
-- **Android** — Android-specific skills when present, with source-driven fallback to local Android docs and build/test commands.
-- **React Native** — React Native-specific skills when present, with web/mobile UI and native runtime verification fallbacks.
-- **Kotlin Multiplatform (KMP)** — shared API/model/testing workflows, with platform host routing for Android and iOS surfaces.
+- **macOS / SwiftPM** — Swift package workflows, app packaging, signing, notarization, and desktop SwiftUI patterns.
+- **App Store Connect** — build upload, TestFlight orchestration, submission health, release flow, signing setup, crash triage, and ASO/review workflows.
 
-Apple and mobile skills are vendored directly under `skills/` and updated manually. This repo does not depend on a fixed local external path or sync cache.
+Apple-platform skills are vendored directly under `skills/` and updated manually. This repo does not depend on a fixed local external path or sync cache. Android, React Native, and KMP are future expansion targets rather than current production routing targets.
 
 ---
 
@@ -163,7 +162,7 @@ Skills are plain Markdown - they work with any agent that accepts system prompts
 
 ## Skill Catalog
 
-The commands above are entry points. The pack includes core lifecycle skills plus platform-specific extensions for mobile and Apple-platform development. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
+The commands above are entry points. The pack includes core lifecycle skills plus platform-specific extensions for Apple-platform development. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
 
 ### Meta - Discover which skill applies
 

@@ -104,7 +104,7 @@ For example, when you ask the agent to:
 - **Fix a bug** &rarr; It will activate `debugging-and-error-recovery`.
 - **Build SwiftUI UI** &rarr; It will prefer `swiftui-ui-patterns` or `swiftui-view-refactor` over generic UI guidance.
 - **Verify browser behavior** &rarr; It will use `browser-testing-with-devtools`.
-- **Work on Android, React Native, or KMP** &rarr; It will use platform-specific skills when present, otherwise fall back to `source-driven-development` plus local project docs.
+- **Work on Apple-platform runtime behavior** &rarr; It will use `ios-debugger-agent`, `device-interaction`, or project-local Xcode commands when appropriate.
 
 ### 2. Specialized Agent Personas
 The plugin registers reusable subagent definitions from the `agents/` directory:
