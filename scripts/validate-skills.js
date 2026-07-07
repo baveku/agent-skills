@@ -82,6 +82,32 @@ const NONSTANDARD_IMPORTED_SKILLS = {
   'ios-debugger-agent':            'Imported iOS debugger skill with upstream workflow format.',
   'macos-spm-packaging':           'Imported macOS packaging skill with upstream name and workflow format.',
   'modernize-tests':               'Imported Swift testing migration skill with upstream workflow format.',
+  'adaptive':                                     'Imported Google Android skill with upstream workflow format.',
+  'agp-9-upgrade':                                'Imported Google Android skill with upstream workflow format.',
+  'android-cli':                                  'Imported Google Android skill with upstream workflow format.',
+  'android-intent-security':                      'Imported Google Android skill with upstream workflow format.',
+  'appfunctions':                                 'Imported Google Android skill with upstream workflow format.',
+  'camerax':                                      'Imported Google Android skill with upstream workflow format.',
+  'display-glasses-with-jetpack-compose-glimmer': 'Imported Google Android skill with upstream workflow format.',
+  'edge-to-edge':                                 'Imported Google Android skill with upstream workflow format.',
+  'engage-sdk-integration':                       'Imported Google Android skill with upstream workflow format.',
+  'migrate-xml-views-to-jetpack-compose':         'Imported Google Android skill with upstream workflow format.',
+  'navigation-3':                                 'Imported Google Android skill with upstream workflow format.',
+  'perfetto-sql':                                 'Imported Google Android skill with upstream workflow format.',
+  'perfetto-trace-analysis':                      'Imported Google Android skill with upstream workflow format.',
+  'play-billing-library-version-upgrade':         'Imported Google Android skill with upstream workflow format.',
+  'r8-analyzer':                                  'Imported Google Android skill with upstream workflow format.',
+  'styles':                                       'Imported Google Android skill with upstream workflow format.',
+  'testing-setup':                                'Imported Google Android skill with upstream workflow format.',
+  'verified-email':                               'Imported Google Android skill with upstream workflow format.',
+  'wear-compose-m3':                              'Imported Google Android skill with upstream workflow format.',
+  'kotlin-backend-jpa-entity-mapping':                    'Imported JetBrains Kotlin skill with upstream workflow format.',
+  'kotlin-tooling-agp9-migration':                        'Imported JetBrains Kotlin skill with upstream workflow format.',
+  'kotlin-tooling-cocoapods-spm-migration':               'Imported JetBrains Kotlin skill with upstream workflow format.',
+  'kotlin-tooling-immutable-collections-0-5-x-migration': 'Imported JetBrains Kotlin skill with upstream workflow format.',
+  'kotlin-tooling-java-to-kotlin':                        'Imported JetBrains Kotlin skill with upstream workflow format.',
+  'react-native-best-practices':     'Imported Callstack RN performance skill with upstream workflow format.',
+  'react-native-tv-best-practices':  'Imported Callstack RN TV skill with upstream workflow format.',
   'review-swarm':                  'Imported swarm skill with upstream workflow format.',
   'swift-architecture':            'Imported Swift architecture skill with upstream name and workflow format.',
   'swift-concurrency-pro':         'Imported Swift concurrency skill with upstream workflow format.',
@@ -184,16 +210,19 @@ function validateSkill(dirName, knownSkills) {
     return { errors, warnings, label };
   }
 
-  const nonstandardImported = dirName in NONSTANDARD_IMPORTED_SKILLS;
+  // dirName may be a nested path (e.g. swift-best-practices/references/<name>);
+  // allowlists and the name check key off the leaf directory name.
+  const baseName = path.basename(dirName);
+  const nonstandardImported = baseName in NONSTANDARD_IMPORTED_SKILLS;
 
   if (!fm.name) {
     errors.push("Frontmatter missing required field: 'name'");
-  } else if (!nonstandardImported && fm.name !== dirName) {
-    errors.push(`Frontmatter name '${fm.name}' does not match directory name '${dirName}'`);
+  } else if (!nonstandardImported && fm.name !== baseName) {
+    errors.push(`Frontmatter name '${fm.name}' does not match directory name '${baseName}'`);
   }
 
-  if (!KEBAB_CASE.test(dirName)) {
-    errors.push(`Directory name '${dirName}' is not lowercase-hyphen-separated (skill-anatomy.md: Naming Conventions)`);
+  if (!KEBAB_CASE.test(baseName)) {
+    errors.push(`Directory name '${baseName}' is not lowercase-hyphen-separated (skill-anatomy.md: Naming Conventions)`);
   }
 
   if (!fm.description) {
@@ -218,7 +247,7 @@ function validateSkill(dirName, knownSkills) {
   // If a skill's frontmatter tries to declare its own exemption, fail loud —
   // that's a sign someone is trying to bypass the validator.
   if (fm.type === 'meta' || fm.exempt === 'sections') {
-    if (!SECTION_EXEMPT_SKILLS[dirName]) {
+    if (!SECTION_EXEMPT_SKILLS[baseName]) {
       errors.push(
         `Frontmatter declares 'type: meta' or 'exempt: sections' but '${dirName}' is not in ` +
         `the validator's SECTION_EXEMPT_SKILLS allowlist. ` +
@@ -228,7 +257,7 @@ function validateSkill(dirName, knownSkills) {
   }
 
   // ── Required sections ────────────────────────────────────────────────────
-  const sectionExempt = dirName in SECTION_EXEMPT_SKILLS || nonstandardImported;
+  const sectionExempt = baseName in SECTION_EXEMPT_SKILLS || nonstandardImported;
   if (nonstandardImported) {
     label = ' (nonstandard imported skill)';
   } else if (dirName in SECTION_EXEMPT_SKILLS) {
@@ -267,12 +296,35 @@ function main() {
     .filter(d => fs.statSync(path.join(SKILLS_DIR, d)).isDirectory())
     .sort();
 
-  const knownSkills = new Set(skillDirs);
+  // Lane routers keep their domain skills nested under references/ so hosts
+  // that auto-load skills/ (Antigravity) only see the router. Validate the
+  // nested skills too, and let cross-references resolve to their leaf names.
+  const NESTED_SKILL_ROOTS = [
+    'swift-best-practices/references',
+    'web-best-practices/references',
+    'backend-best-practices/references',
+    'kotlin-best-practices/references',
+    'android-best-practices/references',
+  ];
+  const nestedDirs = [];
+  for (const root of NESTED_SKILL_ROOTS) {
+    const abs = path.join(SKILLS_DIR, root);
+    if (!fs.existsSync(abs)) continue;
+    for (const d of fs.readdirSync(abs).sort()) {
+      if (fs.statSync(path.join(abs, d)).isDirectory()) nestedDirs.push(`${root}/${d}`);
+    }
+  }
+
+  const allDirs = [...skillDirs.filter(d => !NESTED_SKILL_ROOTS.some(r => r.startsWith(d + '/') || r === d)), ...nestedDirs];
+  // The router itself is still a top-level skill — keep it in the list.
+  if (skillDirs.includes('swift-best-practices')) allDirs.unshift('swift-best-practices');
+
+  const knownSkills = new Set([...skillDirs, ...nestedDirs.map(d => path.basename(d))]);
 
   let totalErrors   = 0;
   let totalWarnings = 0;
 
-  for (const dirName of skillDirs) {
+  for (const dirName of allDirs) {
     const { errors, warnings, label } = validateSkill(dirName, knownSkills);
     totalErrors   += errors.length;
     totalWarnings += warnings.length;
@@ -288,7 +340,7 @@ function main() {
   }
 
   const status = totalErrors > 0 ? 'FAILED' : totalWarnings > 0 ? 'PASSED WITH WARNINGS' : 'PASSED';
-  console.log(`\n${skillDirs.length} skills checked — ${totalErrors} error(s), ${totalWarnings} warning(s) — ${status}`);
+  console.log(`\n${allDirs.length} skills checked (${skillDirs.length} top-level, ${nestedDirs.length} nested) — ${totalErrors} error(s), ${totalWarnings} warning(s) — ${status}`);
 
   if (totalErrors > 0) process.exit(1);
 }

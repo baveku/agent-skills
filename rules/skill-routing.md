@@ -18,7 +18,7 @@ Classify every engineering request in this order:
 - If a task matches a skill, invoke or follow that skill before editing files.
 - Prefer one lifecycle skill, one lane skill, and one verification skill per turn.
 - A per-project `AGENTS.md`/`CLAUDE.md` that pins a lane overrides detection — trust it and skip re-detection.
-- Do not invent missing Android, React Native, or KMP skills. Treat them as future expansion targets and use `source-driven-development` plus project-local commands.
+- Every current platform routes through a lane router: 🍎 `swift-best-practices`, 🌐 `web-best-practices`, ⚙️ `backend-best-practices`, 📱 `react-native-best-practices` / 📺 `react-native-tv-best-practices`, 🅺 `kotlin-best-practices`, 🤖 `android-best-practices`. For surfaces no router covers, use `source-driven-development` plus project-local commands instead of inventing skills.
 - Slash commands and natural-language requests follow the same routing.
 
 ## Project Detection
@@ -27,8 +27,12 @@ Detect from files in the repo (or, in a monorepo, the directory the task touches
 
 | Signals present | Lane |
 | --- | --- |
+| `package.json` with react-native/expo · `react-native.config.js` · `app.json` with expo · `ios/` + `android/` dirs in a JS project | 📱 React Native (check BEFORE 🌐 — RN repos also contain react) |
+| RN project targeting TV — react-native-tvos, Expo TV, Amazon Vega/Kepler, or TV-specific config | 📺 React Native TV |
 | `*.xcodeproj`, `*.xcworkspace`, `Package.swift`, `Info.plist`, `*.swift` | 🍎 Apple/Swift |
 | `package.json` with react/vue/svelte/next/vite · `*.tsx`/`*.jsx` · `index.html` · tailwind config | 🌐 Frontend |
+| `AndroidManifest.xml` · `com.android.application`/`com.android.library` plugin in gradle · Jetpack Compose deps · `res/` layout dirs | 🤖 Android (check BEFORE 🅺 — Android repos are Kotlin repos too) |
+| `*.kt` sources · `build.gradle.kts`/`settings.gradle.kts` · KMP module layout (`commonMain`/`androidMain`/`iosMain`) | 🅺 Kotlin (check BEFORE ⚙️ — Kotlin repos also match gradle signals) |
 | `go.mod` · `Cargo.toml` · `pom.xml`/`build.gradle` · `pyproject.toml`/`requirements.txt` (fastapi/django/flask) · `package.json` with express/nest/fastify · `Dockerfile` + API routes and no UI | ⚙️ Backend/API |
 | Multiple lanes match (monorepo) | Detect per-task from the touched directory |
 
@@ -55,40 +59,29 @@ If detection is ambiguous, state your best guess and ask before proceeding.
 
 ## 🍎 Apple/Swift Bucket
 
-| Surface | Prefer |
-| --- | --- |
-| SwiftUI UI / patterns | `swiftui-ui-patterns`, `swiftui-view-refactor`, `swiftui-specialist` |
-| SwiftUI review / idioms | `swiftui-pro`, `swiftui-whats-new-27`, `swiftui-liquid-glass` |
-| SwiftUI performance | `swiftui-performance-audit` |
-| App architecture | `swift-architecture` |
-| Concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` |
-| Swift testing | `swift-testing-pro` |
-| UIKit | `uikit-modernization`, `uikit-accessibility-auditor` |
-| Accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` |
-| Runtime verification | `ios-debugger-agent`, `device-interaction` |
-| Build / signing / security | `asc-xcode-build`, `asc-signing-setup`, `audit-xcode-security` |
-| Release / TestFlight / crashes | `asc-release-flow`, `asc-testflight-orchestration`, `asc-submission-health`, `asc-crash-triage`, `asc-cli-usage` |
-| App Store presence | `appstore-review`, `appstore-aso` |
-| macOS / SPM packaging | `macos-spm-packaging` |
-| C interop bounds safety | `c-bounds-safety` |
+All Apple-lane domain skills are consolidated under the `swift-best-practices` router skill. For any 🍎 task, open `swift-best-practices` first — its Routing Table maps every surface (SwiftUI UI/review/performance, architecture, concurrency, SwiftData, testing, UIKit, accessibility, security, runtime verification, Xcode build/signing, App Store release/TestFlight/ASO, macOS packaging, C interop) to the authoritative reference under `skills/swift-best-practices/references/<name>/SKILL.md`, which is read on demand. Do not duplicate that table here.
 
 ## 🌐 Frontend Bucket
 
-| Surface | Prefer |
-| --- | --- |
-| Web UI / components / state | `frontend-ui-engineering` |
-| Runtime verification | `browser-testing-with-devtools` |
-| Performance (Core Web Vitals) | `webperf`, `performance-optimization` |
-| Accessibility | `code-review-and-quality` (a11y axis) |
+All web domain skills are consolidated under the `web-best-practices` router. For any 🌐 task, open `web-best-practices` first — its table maps each surface (UI/components/state, browser runtime verification, performance) to a reference under `skills/web-best-practices/references/<name>/SKILL.md`, read on demand. For a full Core Web Vitals audit, use the `/webperf` command; `performance-optimization` remains a shared fallback.
 
 ## ⚙️ Backend/API Bucket
 
+All backend domain skills are consolidated under the `backend-best-practices` router. For any ⚙️ task, open `backend-best-practices` first — its table maps each surface (API contracts, security/untrusted input/auth, observability, CI/CD) to a reference under `skills/backend-best-practices/references/<name>/SKILL.md`, read on demand. `performance-optimization` remains a shared fallback for server/query hotspots.
+
+> Backend has no dedicated persistence/messaging/database reference yet. For those surfaces use `source-driven-development` with the official docs plus project-local commands.
+
+## 🤖 Android Bucket
+
+All Android domain skills are consolidated under the `android-best-practices` router (vendored from Google's android/skills). For any 🤖 task, open `android-best-practices` first — it covers Jetpack Compose UI (adaptive layouts, XML migration, Styles, Navigation 3, edge-to-edge), AGP builds, Perfetto profiling, R8, intent security, testing setup, CameraX, Play Billing/Engage, Wear OS, and XR. For KMP modules inside an Android project, combine with `kotlin-best-practices`.
+
+## 🅺 Kotlin Bucket
+
+All Kotlin domain skills are consolidated under the `kotlin-best-practices` router (vendored from JetBrains). For any 🅺 task, open `kotlin-best-practices` first — it covers Spring/JPA persistence in Kotlin, Java→Kotlin conversion, and KMP tooling migrations (AGP 9, CocoaPods→SPM, kotlinx immutable collections). For Kotlin backend API/security/observability surfaces, combine with `backend-best-practices`. Jetpack Compose UI is not covered yet — use `source-driven-development` plus official docs.
+
+## 📱 React Native Bucket
+
 | Surface | Prefer |
 | --- | --- |
-| API / interface contracts | `api-and-interface-design` |
-| Security / untrusted input / auth | `security-and-hardening` |
-| Observability / logging / tracing | `observability-and-instrumentation` |
-| Performance (server / query) | `performance-optimization` |
-| CI/CD / pipelines | `ci-cd-and-automation` |
-
-> Backend has no dedicated persistence/messaging/database skill yet. For those surfaces use `source-driven-development` with the official docs plus project-local commands. Candidate future skills, not current routing targets.
+| Any RN performance/engineering surface — FPS, re-renders, TTI, bundle size, memory, animations, native modules | `react-native-best-practices` (Callstack; its internal references cover js-*/native-*/bundle-* topics) |
+| TV targets — focus/D-pad navigation, 10-foot UI, TV playback/DRM, react-native-tvos / Expo TV / Vega | `react-native-tv-best-practices` |

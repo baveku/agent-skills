@@ -15,6 +15,8 @@ This is a **Frontend/web** project (React/Vue/Svelte/Next, Vite, TypeScript).
 
 ## Fast picks
 
-- UI / components / state → `frontend-ui-engineering`
-- Verify in a real browser → `browser-testing-with-devtools`
-- Core Web Vitals → `webperf`
+Open the `web-best-practices` router first — its table maps every surface to the reference to read.
+
+- UI / components / state → `web-best-practices/references/frontend-ui-engineering`
+- Verify in a real browser → `web-best-practices/references/browser-testing-with-devtools`
+- Core Web Vitals → `/webperf` command

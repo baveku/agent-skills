@@ -13,11 +13,11 @@ Agent Skills is a collection of engineering workflow skills organized by develop
 
 When a task arrives, classify it before choosing skills (`rules/skill-routing.md` is the canonical policy):
 
-1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API. Detect from repo files (`*.xcodeproj`/`Package.swift` → 🍎; react/vue/vite `package.json` or `*.tsx` → 🌐; `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️); detect per directory in a monorepo. A per-project `AGENTS.md` pinning a lane overrides detection.
+1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, ⚙️ Backend/API, 📱 React Native, 📺 React Native TV, 🅺 Kotlin, or 🤖 Android. Detect from repo files (`package.json` with react-native/expo → 📱, checked BEFORE 🌐 since RN repos also contain react; TV-targeted RN → 📺; `*.xcodeproj`/`Package.swift` → 🍎; react/vue/vite `package.json` or `*.tsx` → 🌐; `AndroidManifest.xml`/`com.android.application`/Compose deps → 🤖, checked BEFORE 🅺 since Android repos are Kotlin repos too; `*.kt`/`build.gradle.kts`/KMP layout → 🅺, checked BEFORE ⚙️ since Kotlin repos also match gradle; `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️); detect per directory in a monorepo. A per-project `AGENTS.md` pinning a lane overrides detection.
 2. **Lifecycle** — define, plan, build, verify, review, ship.
 3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release.
 
-Stay in the detected lane: use its bucket plus the Shared (lifecycle) bucket only. Prefer the most specific available lane skill. Apple-platform skills are the current mobile production target. Android, React Native, and KMP are future expansion targets; do not invent missing skills for them.
+Stay in the detected lane: use its bucket plus the Shared (lifecycle) bucket only. Prefer the most specific available lane skill. Apple-platform, React Native, Kotlin/KMP, and native Android are all current production targets, each behind a lane router. For surfaces no router covers, do not invent skills — use `source-driven-development` plus project-local commands.
 
 ```
 Task arrives
@@ -151,24 +151,19 @@ These are the subtle errors that look like productivity but create problems:
 
 6. **When in doubt, start with a spec.** If the task is non-trivial and there's no spec, begin with `spec-driven-development`.
 
-7. **Do not invent missing skills.** For Android, React Native, or KMP work, treat the platform as out of scope for current production routing and combine the generic lifecycle skill with `source-driven-development`, local project docs, and the platform's build/test commands.
+7. **Do not invent missing skills.** For surfaces no lane router covers, combine the generic lifecycle skill with `source-driven-development`, local project docs, and the platform's build/test commands. (React Native routes through `react-native-best-practices` / `react-native-tv-best-practices`; Kotlin/KMP through `kotlin-best-practices`; native Android through `android-best-practices`.)
 
 ## Lane Routing
 
 | Lane | Surface | Prefer | Fallback |
 | --- | --- | --- | --- |
-| 🌐 | Web UI | `frontend-ui-engineering` | `api-and-interface-design` for contracts |
-| 🌐 | Runtime verification | `browser-testing-with-devtools` | project test scripts |
-| 🌐 | Performance | `/webperf`, `performance-optimization` | `browser-testing-with-devtools` for runtime evidence |
-| 🍎 | SwiftUI UI | `swiftui-ui-patterns`, `swiftui-view-refactor` | `frontend-ui-engineering` for generic UI principles |
-| 🍎 | SwiftUI review | `swiftui-pro` | `code-review-and-quality` |
-| 🍎 | SwiftUI performance | `swiftui-performance-audit` | `performance-optimization` |
-| 🍎 | Accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | generic a11y rules |
-| 🍎 | Runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands |
-| 🍎 | Concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | generic review/security skills |
-| ⚙️ | API contract / boundary | `api-and-interface-design` | `code-review-and-quality` |
-| ⚙️ | Untrusted input / auth | `security-and-hardening` | — |
-| ⚙️ | Observability | `observability-and-instrumentation` | — |
+| 🍎 | Any Apple/Swift surface | `swift-best-practices` — lane router, references read on demand | generic Shared-bucket skills |
+| 🌐 | Any web frontend surface | `web-best-practices` — lane router (UI, browser verification); `/webperf` for CWV audits | `performance-optimization` |
+| ⚙️ | Any backend/API surface | `backend-best-practices` — lane router (contracts, security, observability, CI/CD) | `performance-optimization` for server hotspots |
+| 📱 | Any React Native surface | `react-native-best-practices` — FPS, re-renders, TTI, bundle, memory, native modules | generic Shared-bucket skills |
+| 📺 | React Native TV targets | `react-native-tv-best-practices` — focus/D-pad, 10-foot UI, TV playback | `react-native-best-practices` |
+| 🅺 | Kotlin / KMP | `kotlin-best-practices` — Spring/JPA persistence, Java→Kotlin, KMP tooling migrations | `backend-best-practices` for API/security surfaces |
+| 🤖 | Native Android | `android-best-practices` — Compose UI, navigation, AGP, Perfetto, security, testing, Play, Wear, XR | `kotlin-best-practices` for KMP modules |
 
 ## Lifecycle Sequence
 
