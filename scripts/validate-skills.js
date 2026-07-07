@@ -66,6 +66,7 @@ const SECTION_EXEMPT_SKILLS = {
 const NONSTANDARD_IMPORTED_SKILLS = {
   'appstore-aso':                  'Imported Apple/App Store skill with upstream name and workflow format.',
   'appstore-review':               'Imported Apple/App Store skill with upstream workflow format.',
+  'adopt-c-bounds-safety':         'Imported Apple C bounds-safety skill with upstream workflow format.',
   'asc-cli-usage':                 'Imported App Store Connect CLI skill with upstream workflow format.',
   'asc-crash-triage':              'Imported App Store Connect CLI skill with upstream workflow format.',
   'asc-release-flow':              'Imported App Store Connect CLI skill with upstream workflow format.',
@@ -74,6 +75,7 @@ const NONSTANDARD_IMPORTED_SKILLS = {
   'asc-testflight-orchestration':  'Imported App Store Connect CLI skill with upstream workflow format.',
   'asc-xcode-build':               'Imported App Store Connect CLI skill with upstream workflow format.',
   'audit-xcode-security':          'Imported Apple security skill with upstream name and workflow format.',
+  'audit-xcode-security-settings': 'Imported Apple security skill with upstream workflow format.',
   'bug-hunt-swarm':                'Imported swarm skill with upstream workflow format.',
   'c-bounds-safety':               'Imported C safety skill with upstream workflow format.',
   'device-interaction':            'Imported Apple device interaction skill with upstream workflow format.',
@@ -123,6 +125,7 @@ const NONSTANDARD_IMPORTED_SKILLS = {
   'swiftui-view-refactor':         'Imported SwiftUI refactor skill with upstream workflow format.',
   'swiftui-whats-new-27':          'Imported SwiftUI SDK update skill with upstream workflow format.',
   'uikit-accessibility-auditor':   'Imported UIKit accessibility skill with upstream workflow format.',
+  'uikit-app-modernization':       'Imported UIKit modernization skill with upstream workflow format.',
   'uikit-modernization':           'Imported UIKit modernization skill with upstream name and workflow format.',
 };
 

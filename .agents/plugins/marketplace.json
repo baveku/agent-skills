@@ -1,0 +1,20 @@
+{
+  "name": "baveku-agent-skills",
+  "interface": {
+    "displayName": "Baveku Agent Skills"
+  },
+  "plugins": [
+    {
+      "name": "agent-skills",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

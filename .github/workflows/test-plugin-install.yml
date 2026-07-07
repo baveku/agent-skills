@@ -41,11 +41,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
 
-      - name: Validate marketplace and plugin manifests
+      - name: Validate Claude marketplace and plugin manifests
         run: claude plugin validate .
+
+      - name: Validate Codex manifests and install views
+        run: node scripts/validate-plugin-manifests.js
 
   test-install:
     name: Test plugin installation

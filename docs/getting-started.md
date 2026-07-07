@@ -111,7 +111,7 @@ Load an agent definition when you need specialized review. For example, ask your
 
 ## Using Commands
 
-The `.claude/commands/` directory contains slash commands for Claude Code. Antigravity slash entries are generated from markdown skill aliases in `skills/<alias>/SKILL.md`. Claude plugin installs use `claude/skills/`, and Codex-style installs can use `codex/skills/`, to avoid loading those aliases as normal skills. Commands are convenience wrappers, not the only way to use the workflows.
+The `.claude/commands/` directory contains slash commands for Claude Code. Antigravity slash entries are generated from markdown skill aliases in `skills/<alias>/SKILL.md`. Claude plugin installs use `claude/skills/`, and Codex plugin installs use `codex/skills/`, to avoid loading those aliases as normal skills. Commands are convenience wrappers, not the only way to use the workflows.
 
 | Command | Skill Invoked |
 |---------|---------------|
@@ -140,6 +140,8 @@ If your agent platform does not support slash commands, use natural language. `A
 | `/webperf` | "Audit this web page's Core Web Vitals." |
 
 > **Note:** Antigravity CLI no longer uses TOML command files. Use markdown skills for Antigravity slash aliases.
+
+> **Codex:** install via `.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json`. See [codex-setup.md](codex-setup.md).
 
 ## Using References
 

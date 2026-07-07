@@ -1,0 +1,42 @@
+{
+  "name": "agent-skills",
+  "version": "0.1.0",
+  "description": "Production-grade engineering skills for AI coding agents, extended for Apple-platform development.",
+  "author": {
+    "name": "baveku",
+    "url": "https://github.com/baveku"
+  },
+  "homepage": "https://github.com/baveku/agent-skills",
+  "repository": "https://github.com/baveku/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agents",
+    "engineering",
+    "apple",
+    "ios",
+    "macos",
+    "swiftui",
+    "swift",
+    "web",
+    "spec",
+    "tdd",
+    "review",
+    "ship"
+  ],
+  "skills": "./codex/skills",
+  "interface": {
+    "displayName": "Agent Skills",
+    "shortDescription": "Production engineering workflows with Apple-platform support.",
+    "longDescription": "Reusable spec, planning, implementation, testing, review, security, performance, and shipping skills for Codex, extended with iOS, macOS, SwiftUI, Swift concurrency, SwiftData, and App Store Connect workflows.",
+    "developerName": "baveku",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/baveku/agent-skills",
+    "defaultPrompt": [
+      "Use Agent Skills to define this feature with a spec first.",
+      "Use Agent Skills to build the next task with tests and verification.",
+      "Use Agent Skills to review this change before shipping."
+    ]
+  }
+}

@@ -11,7 +11,13 @@ Use this skill to produce a sharp consumer-app review focused on whether the app
 
 Base the review on available evidence: app idea, screenshots, landing page, App Store listing, analytics, onboarding, paywall, retention, creator strategy, or user-acquisition data. If key evidence is missing, make explicit assumptions and ask only the highest-leverage follow-up question.
 
-## Workflow
+## When to Use
+
+- The user asks to review or score a consumer app idea.
+- The user provides App Store listings, screenshots, onboarding, paywalls, analytics, or growth data.
+- A subscription app needs sharper positioning, conversion, retention, or distribution strategy.
+
+## Process
 
 1. Identify the app's one job, target user, promised dream, and core pain.
 2. Check whether the value is understood in 5 seconds and whether the app has a share-worthy magic moment.
@@ -56,6 +62,21 @@ Keep the review concise and decisive. Use this structure unless the user asks fo
 [3-5 concrete actions for the next 7-14 days.]
 ```
 
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "Downloads prove demand." | Paid conversion and retained use prove demand. |
+| "The UI needs more polish first." | Communication, offer, and paywall clarity usually leak before polish does. |
+| "We can fix distribution later." | Consumer apps need distribution pressure early or the signal is misleading. |
+
+## Red Flags
+
+- The app cannot be explained in one sentence.
+- The first session does not reveal value before asking for payment.
+- Paywall, onboarding, or listing changes are proposed without a measurement plan.
+- Growth depends on vague virality, broad audiences, or perfect launch timing.
+
 ## Review Rules
 
 - Prioritize willingness to pay over downloads, likes, or vague interest.
@@ -82,3 +103,10 @@ Use these as rough consumer-app targets, not universal laws:
 If screenshots or app pages are provided, inspect them for actual user comprehension, hierarchy, friction, and sales clarity. If the user provides only an idea, review it as an investment memo and clearly label assumptions.
 
 If the app is not a consumer subscription or viral utility app, adapt the rubric but state which principles may not apply.
+
+## Verification
+
+- Verdict is explicit: invest, test, pause, or kill.
+- Scorecard covers clarity, magic moment, friction, paywall, onboarding, distribution, monetization, and cadence.
+- Biggest leaks and next moves are ranked by expected business impact.
+- Assumptions are labeled when evidence is missing.

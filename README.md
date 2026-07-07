@@ -135,9 +135,31 @@ Use agent definitions from `agents/` as Copilot personas and skill content in `.
 </details>
 
 <details>
-<summary><b>Codex / Other Agents</b></summary>
+<summary><b>Codex</b></summary>
 
-Skills are plain Markdown - they work with any agent that accepts system prompts or instruction files. For Codex-style skill loading without Antigravity slash aliases, point at `codex/skills/`. See [docs/getting-started.md](docs/getting-started.md).
+Install the Codex plugin from the repo marketplace:
+
+```bash
+codex plugin marketplace add baveku/agent-skills
+codex plugin add agent-skills@baveku-agent-skills
+```
+
+For local development:
+
+```bash
+git clone https://github.com/baveku/agent-skills.git
+codex plugin marketplace add ./agent-skills
+codex plugin add agent-skills@baveku-agent-skills
+```
+
+The Codex plugin uses `.codex-plugin/plugin.json` and points at `codex/skills/`, so it avoids Antigravity-only slash aliases. See [docs/codex-setup.md](docs/codex-setup.md).
+
+</details>
+
+<details>
+<summary><b>Other Agents</b></summary>
+
+Skills are plain Markdown - they work with any agent that accepts system prompts or instruction files. See [docs/getting-started.md](docs/getting-started.md).
 
 </details>
 
@@ -310,8 +332,10 @@ agent-skills/
 ├── references/                        # Supplementary checklists
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 9 slash commands (Claude Code)
+├── .codex-plugin/plugin.json          # Codex plugin manifest
+├── .agents/plugins/marketplace.json   # Codex repo marketplace entry
 ├── claude/skills/                     # Alias-free full view for Claude plugin installs
-├── codex/skills/                      # Alias-free full view for Codex-style installs
+├── codex/skills/                      # Alias-free full view for Codex plugin installs
 ├── rules/                             # Antigravity always-on routing rules
 ├── skills-manifest.json               # Upstream sources for vendored skills
 ├── plugin.json                        # Antigravity plugin manifest
