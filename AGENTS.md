@@ -35,7 +35,7 @@ The agent should automatically map user intent to skills:
 
 Classify every engineering request in this order:
 
-1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API. Detect from repo files: `*.xcodeproj`/`Package.swift`/`*.swift` → 🍎; `package.json`+react/vue/svelte/vite or `*.tsx` → 🌐; `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️. In a monorepo, detect per touched directory. A per-project `AGENTS.md` that pins a lane overrides detection.
+1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, ⚙️ Backend/API, 📱 React Native, 📺 React Native TV, 🅺 Kotlin, or 🤖 Android. Detect from repo files: `package.json` with react-native/expo → 📱 (check BEFORE 🌐 — RN repos also contain react; TV-targeted RN → 📺); `*.xcodeproj`/`Package.swift`/`*.swift` → 🍎; `package.json`+react/vue/svelte/vite or `*.tsx` → 🌐; `AndroidManifest.xml`/`com.android.application` plugin/Compose deps → 🤖 (check BEFORE 🅺 — Android repos are Kotlin repos too); `*.kt`/`build.gradle.kts`/KMP layout → 🅺 (check BEFORE ⚙️ — Kotlin repos also match gradle); `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️. In a monorepo, detect per touched directory. A per-project `AGENTS.md` that pins a lane overrides detection.
 2. **Lifecycle** — define, plan, build, verify, review, ship
 3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release
 
@@ -43,19 +43,15 @@ Stay in the detected lane: use its bucket plus the Shared (lifecycle) bucket onl
 
 | Lane | Surface | Prefer |
 | --- | --- | --- |
-| 🍎 | SwiftUI UI | `swiftui-ui-patterns`, `swiftui-pro`, `swiftui-view-refactor` |
-| 🍎 | SwiftUI performance | `swiftui-performance-audit` |
-| 🍎 | Accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` |
-| 🍎 | Runtime verification | `ios-debugger-agent`, `device-interaction` |
-| 🍎 | Concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` |
-| 🌐 | Web UI / state | `frontend-ui-engineering` |
-| 🌐 | Runtime verification | `browser-testing-with-devtools` |
-| 🌐 | Performance / Core Web Vitals | `/webperf`, `performance-optimization` |
-| ⚙️ | API contract / boundary | `api-and-interface-design` |
-| ⚙️ | Untrusted input / auth | `security-and-hardening` |
-| ⚙️ | Observability | `observability-and-instrumentation` |
+| 🍎 | Any Apple/Swift surface | `swift-best-practices` — lane router; maps each surface to a reference under its `references/`, read on demand |
+| 🌐 | Any web frontend surface | `web-best-practices` — lane router (UI, browser verification, performance); `/webperf` for full CWV audits |
+| ⚙️ | Any backend/API surface | `backend-best-practices` — lane router (contracts, security, observability, CI/CD) |
+| 📱 | Any React Native surface | `react-native-best-practices` (Callstack) — FPS, re-renders, TTI, bundle, memory, native modules |
+| 📺 | React Native TV targets | `react-native-tv-best-practices` — focus/D-pad, 10-foot UI, TV playback |
+| 🅺 | Kotlin / KMP | `kotlin-best-practices` (JetBrains) — Spring/JPA persistence, Java→Kotlin, KMP tooling migrations |
+| 🤖 | Any native Android surface | `android-best-practices` (Google) — Compose UI, navigation, AGP, Perfetto, security, testing, Play, Wear, XR |
 
-Android, React Native, and KMP are future expansion targets, not current production routing targets. Do not invent missing skills for them; use the generic lifecycle skill plus `source-driven-development` and the project's local commands.
+Every current platform routes through a lane router: React Native via `react-native-best-practices` / `react-native-tv-best-practices`, Kotlin/KMP via `kotlin-best-practices`, native Android via `android-best-practices`. For surfaces no router covers, use the generic lifecycle skill plus `source-driven-development` and the project's local commands instead of inventing skills.
 
 ### Skill Selection Limits
 

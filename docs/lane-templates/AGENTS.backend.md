@@ -17,7 +17,9 @@ This is a **Backend/API** project (<!-- set stack: Node/Go/Python/Rust/Java -->)
 
 ## Fast picks
 
-- API contracts / boundaries → `api-and-interface-design`
-- Untrusted input / auth / secrets → `security-and-hardening`
-- Logging / metrics / tracing → `observability-and-instrumentation`
-- Pipelines → `ci-cd-and-automation`
+Open the `backend-best-practices` router first — its table maps every surface to the reference to read.
+
+- API contracts / boundaries → `backend-best-practices/references/api-and-interface-design`
+- Untrusted input / auth / secrets → `backend-best-practices/references/security-and-hardening`
+- Logging / metrics / tracing → `backend-best-practices/references/observability-and-instrumentation`
+- Pipelines → `backend-best-practices/references/ci-cd-and-automation`

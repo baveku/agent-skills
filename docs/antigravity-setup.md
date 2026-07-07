@@ -70,6 +70,7 @@ Antigravity converts markdown skills into slash commands automatically. The life
 | `/code-simplify` | `skills/code-simplify/SKILL.md` | `code-simplification` |
 | `/ship` | `skills/ship/SKILL.md` | `shipping-and-launch` |
 | `/webperf` | `skills/webperf/SKILL.md` | `web-performance-auditor` persona |
+| `/lane-init` | `skills/lane-init/SKILL.md` | pins the project's lane into `AGENTS.md` |
 
 Use `/planning` instead of `/plan` because `/plan` may be reserved by the host.
 
@@ -93,7 +94,17 @@ The agent should classify each task by lifecycle, platform, and surface, then lo
 
 Antigravity automatically discovers skills inside the plugin's `skills/` directory. It uses skill frontmatter (`name`, `description`) to expose slash entries and route user intent.
 
-Apple-platform work should prefer Apple-specific skills such as `swiftui-ui-patterns`, `swiftui-view-refactor`, `swiftui-pro`, `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert`, `ios-debugger-agent`, and `device-interaction`.
+Apple-platform work routes through the `swift-best-practices` lane router: Antigravity discovers only the router, and the router's table maps each surface (SwiftUI, concurrency, SwiftData, testing, accessibility, security, debugging, build/signing, App Store release) to a reference under `skills/swift-best-practices/references/<name>/SKILL.md`, read on demand.
+
+## Staying under the token budget
+
+Antigravity loads every skill under `skills/` (name + description + per-skill framing) plus `rules/` and MCP definitions into a shared budget of roughly **20k tokens**. Past that, entries are truncated and some skills silently stop being discoverable.
+
+To keep headroom, this repo uses the **lane-router pattern**: one visible router skill per platform lane, with all domain skills nested under its `references/` directory and read on demand.
+
+- Lane routers: `swift-best-practices/` (🍎, 31 references), `web-best-practices/` (🌐), `backend-best-practices/` (⚙️), `kotlin-best-practices/` (🅺, vendored from JetBrains), and `android-best-practices/` (🤖, 19 references vendored from Google's android/skills). Antigravity loads only each router's frontmatter; domain skills live under `skills/<router>/references/<name>/` and cost zero startup tokens. Each router's body maps task surfaces to the reference to read. `react-native-best-practices` and `react-native-tv-best-practices` (vendored from Callstack) follow the same shape with flat `references/*.md`.
+- **Keep descriptions tight.** A skill's `description` is loaded every session; put exhaustive trigger lists and API enumerations in the skill body (loaded only on invocation), not the frontmatter.
+- To consolidate another lane: create `skills/<lane>-best-practices/` with a routing-table SKILL.md, `git mv` the lane's skills under its `references/`, repoint the `claude/skills/<name>` and `codex/skills/<name>` symlinks to `../../skills/<lane>-best-practices/references/<name>`, update `skills-manifest.json` dest paths, and add the root to `NESTED_SKILL_ROOTS` in `scripts/validate-skills.js`.
 
 ## Validation
 
@@ -107,4 +118,4 @@ agy plugin validate /path/to/agent-skills
 
 - Antigravity `plugin.json` supports only plugin identity metadata (`name`, `description`, and optional `$schema`).
 - Do not add Antigravity TOML command files; use `skills/<alias>/SKILL.md` aliases instead.
-- For persistent project-level routing, copy or link `AGENTS.md` into the workspace root.
+- For persistent project-level routing, run `/lane-init` in the target project — it detects the lane and writes the `## Skill lane` block into the project's `AGENTS.md` (templates in `docs/lane-templates/` remain available for manual copying).

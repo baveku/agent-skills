@@ -43,8 +43,11 @@ This fork adds platform-aware routing for:
 - **iOS / SwiftUI** — SwiftUI UI patterns, view refactors, performance audits, accessibility, Swift concurrency, SwiftData, Apple security, simulator/device verification.
 - **macOS / SwiftPM** — Swift package workflows, app packaging, signing, notarization, and desktop SwiftUI patterns.
 - **App Store Connect** — build upload, TestFlight orchestration, submission health, release flow, signing setup, crash triage, and ASO/review workflows.
+- **React Native** — Callstack performance guidelines (FPS, TTI, bundle size, memory, re-renders) via `react-native-best-practices`, plus TV targets (focus/D-pad, 10-foot UI, playback) via `react-native-tv-best-practices`.
+- **Kotlin / KMP** — JetBrains skills for Spring/JPA persistence in Kotlin, Java→Kotlin conversion, and KMP tooling migrations (AGP 9, CocoaPods→SPM) via `kotlin-best-practices`.
+- **Android** — Google's official skills for Jetpack Compose UI, Navigation 3, AGP builds, Perfetto profiling, intent security, testing, Play Billing/Engage, Wear OS, and XR via `android-best-practices`.
 
-Apple-platform skills are vendored directly under `skills/` and updated manually. This repo does not depend on a fixed local external path or sync cache. Android, React Native, and KMP are future expansion targets rather than current production routing targets.
+Platform skills are vendored under `skills/` and updated manually via `skills-manifest.json`. Domain skills are consolidated under lane routers (`swift-best-practices`, `web-best-practices`, `backend-best-practices`, `kotlin-best-practices`, `android-best-practices`) whose `references/` are read on demand.
 
 ---
 

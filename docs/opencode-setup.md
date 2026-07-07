@@ -63,7 +63,7 @@ OpenCode agents are instructed (via `AGENTS.md`) to:
 
 The agent evaluates every request and maps it to the appropriate skill by classifying:
 
-1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API — see `rules/skill-routing.md`.
+1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, ⚙️ Backend/API, 📱 React Native, 📺 React Native TV, 🅺 Kotlin, or 🤖 Android — see `rules/skill-routing.md`.
 2. Lifecycle: define, plan, build, verify, review, ship.
 3. Surface: UI, API, persistence, runtime verification, performance, security, accessibility, release.
 
@@ -92,7 +92,7 @@ The development lifecycle is encoded implicitly:
 
 This replaces slash commands like `/spec`, `/plan`, etc.
 
-Platform-specific skills override generic skills. For example, SwiftUI performance uses `swiftui-performance-audit` before `performance-optimization`, and browser runtime verification uses `browser-testing-with-devtools` before generic test guidance. Android, React Native, and KMP are future expansion targets, not current production routing targets.
+Platform-specific skills override generic skills. For example, SwiftUI performance uses `swiftui-performance-audit` before `performance-optimization`, and browser runtime verification uses `browser-testing-with-devtools` before generic test guidance. React Native routes through `react-native-best-practices` and `react-native-tv-best-practices`, Kotlin/KMP through `kotlin-best-practices`, and native Android through `android-best-practices`.
 
 ---
 

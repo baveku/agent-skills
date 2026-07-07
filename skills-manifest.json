@@ -10,7 +10,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "swiftui-pro", "dest": "swiftui-pro" }
+        { "src": "swiftui-pro", "dest": "swift-best-practices/references/swiftui-pro" }
       ]
     },
     {
@@ -20,7 +20,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "swiftdata-pro", "dest": "swiftdata-pro" }
+        { "src": "swiftdata-pro", "dest": "swift-best-practices/references/swiftdata-pro" }
       ]
     },
     {
@@ -30,7 +30,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "swift-concurrency-pro", "dest": "swift-concurrency-pro" }
+        { "src": "swift-concurrency-pro", "dest": "swift-best-practices/references/swift-concurrency-pro" }
       ]
     },
     {
@@ -40,7 +40,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "swift-testing-pro", "dest": "swift-testing-pro" }
+        { "src": "swift-testing-pro", "dest": "swift-best-practices/references/swift-testing-pro" }
       ]
     },
     {
@@ -52,13 +52,13 @@
       "skills": [
         { "src": "bug-hunt-swarm", "dest": "bug-hunt-swarm" },
         { "src": "github", "dest": "github-cli" },
-        { "src": "ios-debugger-agent", "dest": "ios-debugger-agent" },
-        { "src": "macos-spm-app-packaging", "dest": "macos-spm-packaging" },
+        { "src": "ios-debugger-agent", "dest": "swift-best-practices/references/ios-debugger-agent" },
+        { "src": "macos-spm-app-packaging", "dest": "swift-best-practices/references/macos-spm-packaging" },
         { "src": "review-swarm", "dest": "review-swarm" },
-        { "src": "swiftui-liquid-glass", "dest": "swiftui-liquid-glass" },
-        { "src": "swiftui-performance-audit", "dest": "swiftui-performance-audit" },
-        { "src": "swiftui-ui-patterns", "dest": "swiftui-ui-patterns" },
-        { "src": "swiftui-view-refactor", "dest": "swiftui-view-refactor" }
+        { "src": "swiftui-liquid-glass", "dest": "swift-best-practices/references/swiftui-liquid-glass" },
+        { "src": "swiftui-performance-audit", "dest": "swift-best-practices/references/swiftui-performance-audit" },
+        { "src": "swiftui-ui-patterns", "dest": "swift-best-practices/references/swiftui-ui-patterns" },
+        { "src": "swiftui-view-refactor", "dest": "swift-best-practices/references/swiftui-view-refactor" }
       ]
     },
     {
@@ -68,7 +68,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "ios-accessibility", "dest": "ios-accessibility" }
+        { "src": "ios-accessibility", "dest": "swift-best-practices/references/ios-accessibility" }
       ]
     },
     {
@@ -78,8 +78,8 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "swiftui-accessibility-auditor", "dest": "swiftui-accessibility-auditor" },
-        { "src": "uikit-accessibility-auditor", "dest": "uikit-accessibility-auditor" }
+        { "src": "swiftui-accessibility-auditor", "dest": "swift-best-practices/references/swiftui-accessibility-auditor" },
+        { "src": "uikit-accessibility-auditor", "dest": "swift-best-practices/references/uikit-accessibility-auditor" }
       ]
     },
     {
@@ -89,13 +89,13 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "asc-release-flow", "dest": "asc-release-flow" },
-        { "src": "asc-testflight-orchestration", "dest": "asc-testflight-orchestration" },
-        { "src": "asc-signing-setup", "dest": "asc-signing-setup" },
-        { "src": "asc-submission-health", "dest": "asc-submission-health" },
-        { "src": "asc-crash-triage", "dest": "asc-crash-triage" },
-        { "src": "asc-cli-usage", "dest": "asc-cli-usage" },
-        { "src": "asc-xcode-build", "dest": "asc-xcode-build" }
+        { "src": "asc-release-flow", "dest": "swift-best-practices/references/asc-release-flow" },
+        { "src": "asc-testflight-orchestration", "dest": "swift-best-practices/references/asc-testflight-orchestration" },
+        { "src": "asc-signing-setup", "dest": "swift-best-practices/references/asc-signing-setup" },
+        { "src": "asc-submission-health", "dest": "swift-best-practices/references/asc-submission-health" },
+        { "src": "asc-crash-triage", "dest": "swift-best-practices/references/asc-crash-triage" },
+        { "src": "asc-cli-usage", "dest": "swift-best-practices/references/asc-cli-usage" },
+        { "src": "asc-xcode-build", "dest": "swift-best-practices/references/asc-xcode-build" }
       ]
     },
     {
@@ -105,7 +105,7 @@
       "branch": "main",
       "skills_path": "skills",
       "skills": [
-        { "src": "appstore-review", "dest": "appstore-review" }
+        { "src": "appstore-review", "dest": "swift-best-practices/references/appstore-review" }
       ]
     },
     {
@@ -115,7 +115,7 @@
       "branch": "main",
       "skills_path": ".",
       "skills": [
-        { "src": ".", "dest": "appstore-aso" }
+        { "src": ".", "dest": "swift-best-practices/references/appstore-aso" }
       ]
     },
     {
@@ -125,7 +125,60 @@
       "branch": "main",
       "skills_path": ".",
       "skills": [
-        { "src": "swift-security-expert", "dest": "swift-security-expert" }
+        { "src": "swift-security-expert", "dest": "swift-best-practices/references/swift-security-expert" }
+      ]
+    },
+    {
+      "name": "android-skills",
+      "type": "git",
+      "repo": "https://github.com/android/skills.git",
+      "branch": "main",
+      "skills_path": ".",
+      "skills": [
+        { "src": "build/agp/agp-9-upgrade", "dest": "android-best-practices/references/agp-9-upgrade" },
+        { "src": "camera/camerax", "dest": "android-best-practices/references/camerax" },
+        { "src": "device-ai/appfunctions", "dest": "android-best-practices/references/appfunctions" },
+        { "src": "devtools/android-cli", "dest": "android-best-practices/references/android-cli" },
+        { "src": "identity/verified-email", "dest": "android-best-practices/references/verified-email" },
+        { "src": "jetpack-compose/adaptive", "dest": "android-best-practices/references/adaptive" },
+        { "src": "jetpack-compose/migration/migrate-xml-views-to-jetpack-compose", "dest": "android-best-practices/references/migrate-xml-views-to-jetpack-compose" },
+        { "src": "jetpack-compose/theming/styles", "dest": "android-best-practices/references/styles" },
+        { "src": "navigation/navigation-3", "dest": "android-best-practices/references/navigation-3" },
+        { "src": "performance/r8-analyzer", "dest": "android-best-practices/references/r8-analyzer" },
+        { "src": "play/engage-sdk-integration", "dest": "android-best-practices/references/engage-sdk-integration" },
+        { "src": "play/play-billing-library-version-upgrade", "dest": "android-best-practices/references/play-billing-library-version-upgrade" },
+        { "src": "profilers/perfetto-sql", "dest": "android-best-practices/references/perfetto-sql" },
+        { "src": "profilers/perfetto-trace-analysis", "dest": "android-best-practices/references/perfetto-trace-analysis" },
+        { "src": "security/android-intent-security", "dest": "android-best-practices/references/android-intent-security" },
+        { "src": "system/edge-to-edge", "dest": "android-best-practices/references/edge-to-edge" },
+        { "src": "testing/testing-setup", "dest": "android-best-practices/references/testing-setup" },
+        { "src": "wear/wear-compose-m3", "dest": "android-best-practices/references/wear-compose-m3" },
+        { "src": "xr/display-glasses-with-jetpack-compose-glimmer", "dest": "android-best-practices/references/display-glasses-with-jetpack-compose-glimmer" }
+      ]
+    },
+    {
+      "name": "kotlin-agent-skills",
+      "type": "git",
+      "repo": "https://github.com/Kotlin/kotlin-agent-skills.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "kotlin-backend-jpa-entity-mapping", "dest": "kotlin-best-practices/references/kotlin-backend-jpa-entity-mapping" },
+        { "src": "kotlin-tooling-java-to-kotlin", "dest": "kotlin-best-practices/references/kotlin-tooling-java-to-kotlin" },
+        { "src": "kotlin-tooling-agp9-migration", "dest": "kotlin-best-practices/references/kotlin-tooling-agp9-migration" },
+        { "src": "kotlin-tooling-cocoapods-spm-migration", "dest": "kotlin-best-practices/references/kotlin-tooling-cocoapods-spm-migration" },
+        { "src": "kotlin-tooling-immutable-collections-0-5-x-migration", "dest": "kotlin-best-practices/references/kotlin-tooling-immutable-collections-0-5-x-migration" }
+      ]
+    },
+    {
+      "name": "callstack",
+      "type": "git",
+      "repo": "https://github.com/callstackincubator/agent-skills.git",
+      "branch": "main",
+      "skills_path": "skills",
+      "skills": [
+        { "src": "react-native-best-practices", "dest": "react-native-best-practices" },
+        { "src": "react-native-tv-best-practices", "dest": "react-native-tv-best-practices" }
       ]
     },
     {
@@ -135,7 +188,7 @@
       "branch": "main",
       "skills_path": ".",
       "skills": [
-        { "src": "swift-architecture-skill", "dest": "swift-architecture" }
+        { "src": "swift-architecture-skill", "dest": "swift-best-practices/references/swift-architecture" }
       ]
     }
   ]

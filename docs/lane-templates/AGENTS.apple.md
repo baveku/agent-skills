@@ -16,7 +16,9 @@ This is an **Apple/Swift** project (Xcode, SwiftUI/UIKit, Swift Package Manager)
 
 ## Fast picks
 
-- UI work → `swiftui-ui-patterns`, `swiftui-view-refactor`, `swiftui-specialist`
-- Review → `swiftui-pro`
-- Concurrency / data → `swift-concurrency-pro`, `swiftdata-pro`
-- Build / signing / release → `asc-xcode-build`, `asc-signing-setup`, `asc-release-flow`
+Open the `swift-best-practices` router first — its table maps every surface to the reference to read. Direct paths for the most common ones:
+
+- UI work → `swift-best-practices/references/swiftui-ui-patterns`, `.../swiftui-view-refactor`, `.../swiftui-specialist`
+- Review → `swift-best-practices/references/swiftui-pro`
+- Concurrency / data → `.../swift-concurrency-pro`, `.../swiftdata-pro`
+- Build / signing / release → `.../asc-xcode-build`, `.../asc-signing-setup`, `.../asc-release-flow`
