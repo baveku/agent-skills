@@ -27,7 +27,7 @@ Browse the `skills/` directory. Each subdirectory contains a `SKILL.md` with:
 
 For lane-aware work, classify the task before choosing a skill:
 
-1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, ⚙️ Backend/API, 📱 React Native, 📺 React Native TV, 🅺 Kotlin, or 🤖 Android — see `rules/skill-routing.md`. Each lane has a `<lane>-best-practices` router skill whose references are read on demand.
+1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, ⚙️ Backend/API, 📱 React Native, 📺 React Native TV, 🅺 Kotlin, or 🤖 Android — see `rules/skill-routing.md`. Each lane has a `<lane>-best-practices` router skill whose references are read on demand. Run `/lane-init` in a project to pin its lane into `AGENTS.md` so detection is skipped from then on (manual templates: `docs/lane-templates/`).
 2. Lifecycle: define, plan, build, verify, review, ship.
 3. Surface: UI, API, persistence, native bridge, runtime verification, performance, security, accessibility, release.
 

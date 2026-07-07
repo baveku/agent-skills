@@ -9,7 +9,7 @@ skills/       → Core skills (SKILL.md per directory) — auto-loaded by Antigr
 skills/<lane>-best-practices/ → Lane routers (swift-, web-, backend-); domain skills nest under each router's references/ and are read on demand (keeps Antigravity's ~20k skill/rule/MCP budget in check). react-native-best-practices + react-native-tv-best-practices are vendored Callstack routers with the same shape.
 agents/       → Reusable agent personas (code-reviewer, test-engineer, security-auditor, web-performance-auditor)
 hooks/        → Session lifecycle hooks
-.claude/commands/ → Claude Code slash commands (/spec, /plan, /build, /test, /review, /code-simplify, /ship; plus /webperf specialist audit)
+.claude/commands/ → Claude Code slash commands (/spec, /plan, /build, /test, /review, /code-simplify, /ship; plus /webperf specialist audit and /lane-init lane pinning)
 skills/<alias>/SKILL.md → Antigravity-only skill aliases that generate slash commands
 claude/skills/ → Alias-free skill view used by the Claude plugin
 codex/skills/ → Alias-free skill view for Codex-style skill installs

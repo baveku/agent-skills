@@ -70,6 +70,7 @@ Antigravity converts markdown skills into slash commands automatically. The life
 | `/code-simplify` | `skills/code-simplify/SKILL.md` | `code-simplification` |
 | `/ship` | `skills/ship/SKILL.md` | `shipping-and-launch` |
 | `/webperf` | `skills/webperf/SKILL.md` | `web-performance-auditor` persona |
+| `/lane-init` | `skills/lane-init/SKILL.md` | pins the project's lane into `AGENTS.md` |
 
 Use `/planning` instead of `/plan` because `/plan` may be reserved by the host.
 
@@ -117,4 +118,4 @@ agy plugin validate /path/to/agent-skills
 
 - Antigravity `plugin.json` supports only plugin identity metadata (`name`, `description`, and optional `$schema`).
 - Do not add Antigravity TOML command files; use `skills/<alias>/SKILL.md` aliases instead.
-- For persistent project-level routing, copy or link `AGENTS.md` into the workspace root.
+- For persistent project-level routing, run `/lane-init` in the target project — it detects the lane and writes the `## Skill lane` block into the project's `AGENTS.md` (templates in `docs/lane-templates/` remain available for manual copying).
