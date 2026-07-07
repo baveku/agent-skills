@@ -1,10 +1,10 @@
 # Agent Skills
 
-**Production-grade engineering skills for AI coding agents, extended for Apple-platform development.**
+**Production-grade engineering skills for AI coding agents, extended with platform lanes for Apple, Android, Kotlin/KMP, React Native, web, and backend development.**
 
-This is a fork of [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) that keeps the original production engineering lifecycle and adds stronger support for Apple-platform development across iOS, macOS, SwiftUI, Swift concurrency, SwiftData, App Store Connect, and simulator/device verification.
+This is a fork of [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) that keeps the original production engineering lifecycle and adds **lane-based routing**: every platform's domain skills are consolidated under a `<lane>-best-practices` router skill whose references are read on demand — so hosts with tight startup budgets (Antigravity) load a handful of routers instead of a hundred descriptions, while Claude/Codex installs keep full per-skill discovery.
 
-Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. They are packaged so AI agents follow them consistently across web, backend, and Apple-platform development.
+Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. They are packaged so AI agents follow them consistently across web, backend, and mobile development.
 
 ```
   DEFINE          PLAN           BUILD          VERIFY         REVIEW          SHIP
@@ -19,10 +19,11 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 ## Commands
 
-8 lifecycle entry points map to the development workflow. They work as Claude Code command files, Antigravity skill-generated slash commands, or natural-language workflows through `AGENTS.md` and `using-agent-skills`.
+9 entry points map to the development workflow. They work as Claude Code command files, Antigravity skill-generated slash commands, or natural-language workflows through `AGENTS.md` and `using-agent-skills`.
 
 | What you're doing | Command | Key principle |
 |-------------------|---------|---------------|
+| Pin the project's platform lane | `/lane-init` | Detect once, write it down |
 | Define what to build | `/spec` | Spec before code |
 | Plan how to build it | `/plan` | Small, atomic tasks |
 | Build incrementally | `/build` | One slice at a time |
@@ -34,11 +35,11 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 Want fewer manual steps once the spec exists? **`/build auto`** generates the plan and implements every task in a single approved pass — you approve the plan once, then it runs autonomously. It removes the human stepping *between* tasks, not the verification: every task is still test-driven and committed individually, and it pauses on failures or risky steps.
 
-Skills also activate automatically based on what you're doing. Web UI triggers `frontend-ui-engineering`; SwiftUI work prefers `swiftui-ui-patterns`, `swiftui-view-refactor`, or `swiftui-pro`; platform gaps fall back to `source-driven-development` plus local project docs.
+Skills also activate automatically: the agent detects the project's lane (per `rules/skill-routing.md`), opens that lane's router, and reads only the references the task needs. Run `/lane-init` once per project to pin the lane into `AGENTS.md` and skip detection entirely (manual templates: [docs/lane-templates/](docs/lane-templates/)). Surfaces no router covers fall back to `source-driven-development` plus local project docs.
 
-### Apple-platform development support
+### Platform lanes
 
-This fork adds platform-aware routing for:
+This fork adds lane-based routing for:
 
 - **iOS / SwiftUI** — SwiftUI UI patterns, view refactors, performance audits, accessibility, Swift concurrency, SwiftData, Apple security, simulator/device verification.
 - **macOS / SwiftPM** — Swift package workflows, app packaging, signing, notarization, and desktop SwiftUI patterns.
@@ -154,6 +155,20 @@ The commands above are entry points. The pack includes core lifecycle skills plu
 |-------|-------------|----------|
 | [using-agent-skills](skills/using-agent-skills/SKILL.md) | Maps incoming work to the right skill workflow and defines shared operating rules | Starting a session or deciding which skill applies |
 
+### Platform Lane Routers
+
+Each router is the single entry point for its lane; its domain skills live under `references/` and are read on demand.
+
+| Router | Lane | References |
+|--------|------|------------|
+| [swift-best-practices](skills/swift-best-practices/SKILL.md) | 🍎 Apple/Swift | 31 — SwiftUI (patterns, review, performance, Apple-authored guidance), concurrency, SwiftData, testing, UIKit, accessibility, security, simulator/device debugging, Xcode build/signing, App Store Connect release, ASO, macOS packaging, C interop |
+| [web-best-practices](skills/web-best-practices/SKILL.md) | 🌐 Frontend | 2 — frontend UI engineering, browser runtime verification via Chrome DevTools |
+| [backend-best-practices](skills/backend-best-practices/SKILL.md) | ⚙️ Backend/API | 4 — API contracts, security hardening, observability, CI/CD |
+| [react-native-best-practices](skills/react-native-best-practices/SKILL.md) | 📱 React Native | 29 — Callstack performance guide: FPS/re-renders, TTI, bundle size, memory, animations, Turbo Modules |
+| [react-native-tv-best-practices](skills/react-native-tv-best-practices/SKILL.md) | 📺 RN TV | focus/D-pad navigation, 10-foot UI, TV playback/DRM for react-native-tvos / Expo TV / Vega |
+| [kotlin-best-practices](skills/kotlin-best-practices/SKILL.md) | 🅺 Kotlin/KMP | 5 — JetBrains: Spring/JPA entities in Kotlin, Java→Kotlin conversion, AGP 9 / CocoaPods→SPM / collections migrations |
+| [android-best-practices](skills/android-best-practices/SKILL.md) | 🤖 Android | 19 — Google: Jetpack Compose UI, Navigation 3, AGP, Perfetto, R8, intent security, testing, CameraX, Play Billing/Engage, Wear OS, XR |
+
 ### Define - Clarify what to build
 
 | Skill | What It Does | Use When |
@@ -177,14 +192,14 @@ The commands above are entry points. The pack includes core lifecycle skills plu
 | [context-engineering](skills/context-engineering/SKILL.md) | Feed agents the right information at the right time - rules files, context packing, MCP integrations | Starting a session, switching tasks, or when output quality drops |
 | [source-driven-development](skills/source-driven-development/SKILL.md) | Ground every framework decision in official documentation - verify, cite sources, flag what's unverified | You want authoritative, source-cited code for any framework or library |
 | [doubt-driven-development](skills/doubt-driven-development/SKILL.md) | Adversarial fresh-context review of every non-trivial decision in-flight - CLAIM → EXTRACT → DOUBT → RECONCILE → STOP, with optional user-authorized cross-model escalation | Stakes are high (production, security, irreversible), working in unfamiliar code, or a confident output is cheaper to verify now than to debug later |
-| [frontend-ui-engineering](skills/frontend-ui-engineering/SKILL.md) | Component architecture, design systems, state management, responsive design, WCAG 2.1 AA accessibility | Building or modifying user-facing interfaces |
-| [api-and-interface-design](skills/api-and-interface-design/SKILL.md) | Contract-first design, Hyrum's Law, One-Version Rule, error semantics, boundary validation | Designing APIs, module boundaries, or public interfaces |
+| [frontend-ui-engineering](skills/web-best-practices/references/frontend-ui-engineering/SKILL.md) | Component architecture, design systems, state management, responsive design, WCAG 2.1 AA accessibility | Building or modifying user-facing interfaces (🌐 lane) |
+| [api-and-interface-design](skills/backend-best-practices/references/api-and-interface-design/SKILL.md) | Contract-first design, Hyrum's Law, One-Version Rule, error semantics, boundary validation | Designing APIs, module boundaries, or public interfaces (⚙️ lane) |
 
 ### Verify - Prove it works
 
 | Skill | What It Does | Use When |
 |-------|-------------|----------|
-| [browser-testing-with-devtools](skills/browser-testing-with-devtools/SKILL.md) | Chrome DevTools MCP for live runtime data - DOM inspection, console logs, network traces, performance profiling | Building or debugging anything that runs in a browser |
+| [browser-testing-with-devtools](skills/web-best-practices/references/browser-testing-with-devtools/SKILL.md) | Chrome DevTools MCP for live runtime data - DOM inspection, console logs, network traces, performance profiling | Building or debugging anything that runs in a browser (🌐 lane) |
 | [debugging-and-error-recovery](skills/debugging-and-error-recovery/SKILL.md) | Five-step triage: reproduce, localize, reduce, fix, guard. Stop-the-line rule, safe fallbacks | Tests fail, builds break, or behavior is unexpected |
 
 ### Review - Quality gates before merge
@@ -193,7 +208,7 @@ The commands above are entry points. The pack includes core lifecycle skills plu
 |-------|-------------|----------|
 | [code-review-and-quality](skills/code-review-and-quality/SKILL.md) | Five-axis review, change sizing (~100 lines), severity labels (Nit/Optional/FYI), review speed norms, splitting strategies | Before merging any change |
 | [code-simplification](skills/code-simplification/SKILL.md) | Chesterton's Fence, Rule of 500, reduce complexity while preserving exact behavior | Code works but is harder to read or maintain than it should be |
-| [security-and-hardening](skills/security-and-hardening/SKILL.md) | OWASP Top 10 prevention, auth patterns, secrets management, dependency auditing, three-tier boundary system | Handling user input, auth, data storage, or external integrations |
+| [security-and-hardening](skills/backend-best-practices/references/security-and-hardening/SKILL.md) | OWASP Top 10 prevention, auth patterns, secrets management, dependency auditing, three-tier boundary system | Handling user input, auth, data storage, or external integrations (⚙️ lane) |
 | [performance-optimization](skills/performance-optimization/SKILL.md) | Measure-first approach - Core Web Vitals targets, profiling workflows, bundle analysis, anti-pattern detection | Performance requirements exist or you suspect regressions |
 
 ### Ship - Deploy with confidence
@@ -201,10 +216,10 @@ The commands above are entry points. The pack includes core lifecycle skills plu
 | Skill | What It Does | Use When |
 |-------|-------------|----------|
 | [git-workflow-and-versioning](skills/git-workflow-and-versioning/SKILL.md) | Trunk-based development, atomic commits, change sizing (~100 lines), the commit-as-save-point pattern | Making any code change (always) |
-| [ci-cd-and-automation](skills/ci-cd-and-automation/SKILL.md) | Shift Left, Faster is Safer, feature flags, quality gate pipelines, failure feedback loops | Setting up or modifying build and deploy pipelines |
+| [ci-cd-and-automation](skills/backend-best-practices/references/ci-cd-and-automation/SKILL.md) | Shift Left, Faster is Safer, feature flags, quality gate pipelines, failure feedback loops | Setting up or modifying build and deploy pipelines (⚙️ lane) |
 | [deprecation-and-migration](skills/deprecation-and-migration/SKILL.md) | Code-as-liability mindset, compulsory vs advisory deprecation, migration patterns, zombie code removal | Removing old systems, migrating users, or sunsetting features |
 | [documentation-and-adrs](skills/documentation-and-adrs/SKILL.md) | Architecture Decision Records, API docs, inline documentation standards - document the *why* | Making architectural decisions, changing APIs, or shipping features |
-| [observability-and-instrumentation](skills/observability-and-instrumentation/SKILL.md) | Structured logging, RED metrics, OpenTelemetry tracing, symptom-based alerting - instrument as you build | Adding telemetry, or shipping anything that runs in production |
+| [observability-and-instrumentation](skills/backend-best-practices/references/observability-and-instrumentation/SKILL.md) | Structured logging, RED metrics, OpenTelemetry tracing, symptom-based alerting - instrument as you build | Adding telemetry, or shipping anything that runs in production (⚙️ lane) |
 | [shipping-and-launch](skills/shipping-and-launch/SKILL.md) | Pre-launch checklists, feature flag lifecycle, staged rollouts, rollback procedures, monitoring setup | Preparing to deploy to production |
 
 ---
@@ -267,7 +282,7 @@ Every skill follows a consistent anatomy:
 - **Process, not prose.** Skills are workflows agents follow, not reference docs they read. Each has steps, checkpoints, and exit criteria.
 - **Anti-rationalization.** Every skill includes a table of common excuses agents use to skip steps (e.g., "I'll add tests later") with documented counter-arguments.
 - **Verification is non-negotiable.** Every skill ends with evidence requirements - tests passing, build output, runtime data. "Seems right" is never sufficient.
-- **Progressive disclosure.** The `SKILL.md` is the entry point. Supporting references load only when needed, keeping token usage minimal.
+- **Progressive disclosure.** The `SKILL.md` is the entry point. Supporting references load only when needed, keeping token usage minimal. Lane routers take this one level further: a whole platform's skill set sits behind one router frontmatter, and each domain skill is read only when its surface comes up.
 
 ---
 
@@ -275,41 +290,32 @@ Every skill follows a consistent anatomy:
 
 ```
 agent-skills/
-├── skills/                            # Core lifecycle + platform-specific skills
-│   ├── interview-me/                  #   Define
-│   ├── idea-refine/                   #   Define
-│   ├── spec-driven-development/       #   Define
+├── skills/                            # Shared lifecycle skills + lane routers + slash aliases
+│   ├── spec-driven-development/       #   Define   (also: interview-me, idea-refine)
 │   ├── planning-and-task-breakdown/   #   Plan
-│   ├── incremental-implementation/    #   Build
-│   ├── context-engineering/           #   Build
-│   ├── source-driven-development/     #   Build
-│   ├── doubt-driven-development/      #   Build
-│   ├── frontend-ui-engineering/       #   Build
-│   ├── test-driven-development/       #   Build
-│   ├── api-and-interface-design/      #   Build
-│   ├── browser-testing-with-devtools/ #   Verify
+│   ├── incremental-implementation/    #   Build    (also: context/source/doubt-driven, TDD)
 │   ├── debugging-and-error-recovery/  #   Verify
-│   ├── code-review-and-quality/       #   Review
-│   ├── code-simplification/          #   Review
-│   ├── security-and-hardening/        #   Review
-│   ├── performance-optimization/      #   Review
-│   ├── git-workflow-and-versioning/   #   Ship
-│   ├── ci-cd-and-automation/          #   Ship
-│   ├── deprecation-and-migration/     #   Ship
-│   ├── documentation-and-adrs/        #   Ship
-│   ├── observability-and-instrumentation/ # Ship
-│   ├── shipping-and-launch/           #   Ship
-│   └── using-agent-skills/            #   Meta: how to use this pack
+│   ├── code-review-and-quality/       #   Review   (also: code-simplification, performance)
+│   ├── shipping-and-launch/           #   Ship     (also: git-workflow, deprecation, docs)
+│   ├── using-agent-skills/            #   Meta: routing + operating rules
+│   ├── swift-best-practices/          #   🍎 lane router → references/ (31 Apple skills)
+│   ├── web-best-practices/            #   🌐 lane router → references/
+│   ├── backend-best-practices/        #   ⚙️ lane router → references/
+│   ├── kotlin-best-practices/         #   🅺 lane router → references/ (JetBrains)
+│   ├── android-best-practices/        #   🤖 lane router → references/ (Google)
+│   ├── react-native-best-practices/   #   📱 Callstack router (flat references/)
+│   ├── react-native-tv-best-practices/#   📺 Callstack TV router
+│   └── <alias>/SKILL.md               #   Antigravity slash aliases (spec, build, lane-init, …)
 ├── agents/                            # 4 specialist personas
-├── references/                        # 5 supplementary checklists
+├── references/                        # Supplementary checklists
 ├── hooks/                             # Session lifecycle hooks
-├── .claude/commands/                  # 8 slash commands (Claude Code)
-├── skills/<alias>/SKILL.md            # Antigravity skill-generated slash command aliases
-├── claude/skills/                     # Alias-free skill view for Claude plugin installs
-├── codex/skills/                      # Alias-free skill view for Codex-style installs
+├── .claude/commands/                  # 9 slash commands (Claude Code)
+├── claude/skills/                     # Alias-free full view for Claude plugin installs
+├── codex/skills/                      # Alias-free full view for Codex-style installs
 ├── rules/                             # Antigravity always-on routing rules
+├── skills-manifest.json               # Upstream sources for vendored skills
 ├── plugin.json                        # Antigravity plugin manifest
-└── docs/                              # Setup guides per tool
+└── docs/                              # Setup guides per tool + lane-templates/
 ```
 
 ---
