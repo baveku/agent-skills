@@ -84,7 +84,6 @@ const NONSTANDARD_IMPORTED_SKILLS = {
   'modernize-tests':               'Imported Swift testing migration skill with upstream workflow format.',
   'review-swarm':                  'Imported swarm skill with upstream workflow format.',
   'swift-architecture':            'Imported Swift architecture skill with upstream name and workflow format.',
-  'swift-concurrency-expert':      'Imported Swift concurrency skill with upstream workflow format.',
   'swift-concurrency-pro':         'Imported Swift concurrency skill with upstream workflow format.',
   'swift-security-expert':         'Imported Swift security skill with upstream workflow format.',
   'swift-testing-pro':             'Imported Swift Testing skill with upstream workflow format.',

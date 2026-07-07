@@ -4,18 +4,20 @@ description: Conduct a five-axis code review — correctness, readability, archi
 
 Invoke the agent-skills:code-review-and-quality skill.
 
-Before reviewing, classify the platform and add the most specific review skill:
+Before reviewing, detect the project lane per `rules/skill-routing.md` and add the most specific review skill from that lane:
 
-| Scope | Add this skill |
-| --- | --- |
-| SwiftUI code | `swiftui-pro` |
-| SwiftUI performance symptoms or large dynamic lists | `swiftui-performance-audit` |
-| SwiftUI accessibility | `swiftui-accessibility-auditor` |
-| Swift concurrency | `swift-concurrency-pro` or `swift-concurrency-expert` |
-| SwiftData | `swiftdata-pro` |
-| Apple security, Keychain, CryptoKit, ATS, entitlements | `swift-security-expert` |
-| Web security | `security-and-hardening` |
-| Web performance / Core Web Vitals | `/webperf` or `performance-optimization` |
+| Lane | Scope | Add this skill |
+| --- | --- | --- |
+| 🍎 | SwiftUI code | `swiftui-pro` |
+| 🍎 | SwiftUI performance symptoms or large dynamic lists | `swiftui-performance-audit` |
+| 🍎 | SwiftUI accessibility | `swiftui-accessibility-auditor` |
+| 🍎 | Swift concurrency | `swift-concurrency-pro` |
+| 🍎 | SwiftData | `swiftdata-pro` |
+| 🍎 | Apple security, Keychain, CryptoKit, ATS, entitlements | `swift-security-expert` |
+| 🌐 | Web performance / Core Web Vitals | `/webperf` or `performance-optimization` |
+| ⚙️ | API contract / boundary correctness | `api-and-interface-design` |
+| ⚙️/🌐 | Untrusted input, auth, secrets | `security-and-hardening` |
+| ⚙️ | Logging / metrics / tracing gaps | `observability-and-instrumentation` |
 
 Review the current changes (staged or recent commits) across all five axes:
 

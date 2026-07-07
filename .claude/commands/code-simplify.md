@@ -4,7 +4,7 @@ description: Simplify code for clarity and maintainability — reduce complexity
 
 Invoke the agent-skills:code-simplification skill.
 
-Before simplifying, classify the code surface and add the most specific Apple-platform skill when relevant:
+Before simplifying, detect the project lane per `rules/skill-routing.md`. Simplification is largely lane-agnostic; add a 🍎 Apple/Swift skill when relevant. 🌐 Frontend and ⚙️ Backend simplification runs on the generic `code-simplification` skill plus that lane's review skill.
 
 | Scope | Add this skill |
 | --- | --- |

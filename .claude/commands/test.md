@@ -4,14 +4,15 @@ description: Run TDD workflow — write failing tests, implement, verify. For bu
 
 Invoke the agent-skills:test-driven-development skill.
 
-Classify the platform before choosing extra verification skills:
+Detect the project lane per `rules/skill-routing.md` before choosing extra verification skills:
 
-| Platform / surface | Add this skill when available |
-| --- | --- |
-| Web runtime, DOM, console, network, visual behavior | `browser-testing-with-devtools` |
-| iOS simulator/device behavior | `ios-debugger-agent` or `device-interaction` |
-| Swift Testing test authoring/review | `swift-testing-pro` |
-| Swift concurrency tests | `swift-concurrency-pro` |
+| Lane | Surface | Add this skill when available |
+| --- | --- | --- |
+| 🌐 | Web runtime, DOM, console, network, visual behavior | `browser-testing-with-devtools` |
+| 🍎 | iOS simulator/device behavior | `ios-debugger-agent` or `device-interaction` |
+| 🍎 | Swift Testing test authoring/review | `swift-testing-pro` |
+| 🍎 | Swift concurrency tests | `swift-concurrency-pro` |
+| ⚙️ | API contract / integration tests, auth paths | `api-and-interface-design`, `security-and-hardening` |
 
 For new features:
 1. Write tests that describe the expected behavior (they should FAIL)

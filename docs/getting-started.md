@@ -25,10 +25,10 @@ Browse the `skills/` directory. Each subdirectory contains a `SKILL.md` with:
 - **Common rationalizations** — excuses the agent might use to skip steps
 - **Red flags** — signs the skill is being violated
 
-For platform-aware work, classify the task before choosing a skill:
+For lane-aware work, classify the task before choosing a skill:
 
-1. Lifecycle: define, plan, build, verify, review, ship.
-2. Platform: web, Apple platform, or shared backend/library.
+1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API — see `rules/skill-routing.md`.
+2. Lifecycle: define, plan, build, verify, review, ship.
 3. Surface: UI, API, persistence, native bridge, runtime verification, performance, security, accessibility, release.
 
 ### 3. Load the skill into your agent

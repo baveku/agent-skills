@@ -11,13 +11,13 @@ Agent Skills is a collection of engineering workflow skills organized by develop
 
 ## Skill Discovery
 
-When a task arrives, classify it before choosing skills:
+When a task arrives, classify it before choosing skills (`rules/skill-routing.md` is the canonical policy):
 
-1. **Lifecycle** — define, plan, build, verify, review, ship.
-2. **Platform** — web, Apple platforms (iOS, macOS, watchOS, tvOS), or shared backend/library.
+1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API. Detect from repo files (`*.xcodeproj`/`Package.swift` → 🍎; react/vue/vite `package.json` or `*.tsx` → 🌐; `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️); detect per directory in a monorepo. A per-project `AGENTS.md` pinning a lane overrides detection.
+2. **Lifecycle** — define, plan, build, verify, review, ship.
 3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release.
 
-Prefer the most specific available platform skill. Apple-platform skills are the current mobile production target. Android, React Native, and KMP are future expansion targets; do not invent missing skills for them.
+Stay in the detected lane: use its bucket plus the Shared (lifecycle) bucket only. Prefer the most specific available lane skill. Apple-platform skills are the current mobile production target. Android, React Native, and KMP are future expansion targets; do not invent missing skills for them.
 
 ```
 Task arrives
@@ -145,7 +145,7 @@ These are the subtle errors that look like productivity but create problems:
 
 3. **Specific beats generic.** A SwiftUI performance task uses `swiftui-performance-audit` before `performance-optimization`; a web runtime task uses `browser-testing-with-devtools` before generic test guidance.
 
-4. **Limit active skills.** Prefer one lifecycle skill, one platform/domain skill, and one verification skill per turn. Add more only when the user asks for a full workflow or the change is production-bound and cross-cutting.
+4. **Limit active skills.** Prefer one lifecycle skill, one lane skill, and one verification skill per turn. Add more only when the user asks for a full workflow or the change is production-bound and cross-cutting.
 
 5. **Multiple skills can apply.** A feature implementation might involve `idea-refine` → `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` → `test-driven-development` → `code-review-and-quality` → `code-simplification` → `shipping-and-launch` in sequence.
 
@@ -153,19 +153,22 @@ These are the subtle errors that look like productivity but create problems:
 
 7. **Do not invent missing skills.** For Android, React Native, or KMP work, treat the platform as out of scope for current production routing and combine the generic lifecycle skill with `source-driven-development`, local project docs, and the platform's build/test commands.
 
-## Platform Routing
+## Lane Routing
 
-| Platform / surface | Prefer | Fallback |
-| --- | --- | --- |
-| Web UI | `frontend-ui-engineering` | `api-and-interface-design` for contracts |
-| Web runtime verification | `browser-testing-with-devtools` | project test scripts |
-| Web performance | `/webperf`, `performance-optimization` | `browser-testing-with-devtools` for runtime evidence |
-| iOS SwiftUI UI | `swiftui-ui-patterns`, `swiftui-view-refactor` | `frontend-ui-engineering` for generic UI principles |
-| iOS SwiftUI review | `swiftui-pro` | `code-review-and-quality` |
-| iOS SwiftUI performance | `swiftui-performance-audit` | `performance-optimization` |
-| iOS accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | `frontend-ui-engineering` accessibility rules |
-| iOS runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands |
-| Swift concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | generic review/security skills |
+| Lane | Surface | Prefer | Fallback |
+| --- | --- | --- | --- |
+| 🌐 | Web UI | `frontend-ui-engineering` | `api-and-interface-design` for contracts |
+| 🌐 | Runtime verification | `browser-testing-with-devtools` | project test scripts |
+| 🌐 | Performance | `/webperf`, `performance-optimization` | `browser-testing-with-devtools` for runtime evidence |
+| 🍎 | SwiftUI UI | `swiftui-ui-patterns`, `swiftui-view-refactor` | `frontend-ui-engineering` for generic UI principles |
+| 🍎 | SwiftUI review | `swiftui-pro` | `code-review-and-quality` |
+| 🍎 | SwiftUI performance | `swiftui-performance-audit` | `performance-optimization` |
+| 🍎 | Accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | generic a11y rules |
+| 🍎 | Runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands |
+| 🍎 | Concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | generic review/security skills |
+| ⚙️ | API contract / boundary | `api-and-interface-design` | `code-review-and-quality` |
+| ⚙️ | Untrusted input / auth | `security-and-hardening` | — |
+| ⚙️ | Observability | `observability-and-instrumentation` | — |
 
 ## Lifecycle Sequence
 

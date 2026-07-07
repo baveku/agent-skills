@@ -6,7 +6,7 @@ Invoke the agent-skills:shipping-and-launch skill.
 
 `/ship` is a **fan-out orchestrator**. It runs three specialist personas in parallel against the current change, then merges their reports into a single go/no-go decision with a rollback plan. The personas operate independently — no shared state, no ordering — which is what makes parallel execution safe and useful here.
 
-Before fan-out, classify the release platform: web, Apple platform, or shared backend/library. Use the platform classification to decide which extra checks the main merge phase must run after the three reports return.
+Before fan-out, detect the release lane per `rules/skill-routing.md` — 🍎 Apple/Swift · 🌐 Frontend · ⚙️ Backend/API. Use the lane to decide which extra checks the main merge phase must run after the three reports return.
 
 ## Phase A — Parallel fan-out
 
@@ -33,15 +33,17 @@ Once all three reports are back, the main agent (not a sub-persona) synthesizes 
 
 1. **Code Quality** — Aggregate Critical/Important findings from `code-reviewer` and any failing tests, lint, or build output. Resolve duplicates between reviewers.
 2. **Security** — Promote any Critical/High `security-auditor` findings to launch blockers. Cross-reference with `code-reviewer`'s security axis.
-3. **Performance** — Pull from `code-reviewer`'s performance axis, then apply platform-specific checks:
-   - Web: Core Web Vitals via `/webperf` or `performance-optimization` when evidence exists.
-   - SwiftUI/iOS: `swiftui-performance-audit` or Instruments/MetricKit evidence when relevant.
-4. **Accessibility** — Apply platform-specific accessibility checks:
-   - Web: keyboard navigation, screen reader support, contrast.
-   - SwiftUI/iOS: `swiftui-accessibility-auditor` or `ios-accessibility` when available.
+3. **Performance** — Pull from `code-reviewer`'s performance axis, then apply lane-specific checks:
+   - 🌐 Frontend: Core Web Vitals via `/webperf` or `performance-optimization` when evidence exists.
+   - 🍎 Apple/Swift: `swiftui-performance-audit` or Instruments/MetricKit evidence when relevant.
+   - ⚙️ Backend/API: `performance-optimization` for query/latency hotspots when evidence exists.
+4. **Accessibility** — Apply lane-specific accessibility checks:
+   - 🌐 Frontend: keyboard navigation, screen reader support, contrast.
+   - 🍎 Apple/Swift: `swiftui-accessibility-auditor` or `ios-accessibility` when available.
+   - ⚙️ Backend/API: not applicable — skip.
 5. **Infrastructure** — Env vars, migrations, monitoring, feature flags. Verify directly.
 6. **Documentation** — README, ADRs, changelog. Verify directly.
-7. **Runtime verification** — Web uses `browser-testing-with-devtools`; Apple platforms use `ios-debugger-agent`, `device-interaction`, Xcode build/test commands, or the relevant App Store Connect skills when release flow is involved.
+7. **Runtime verification** — 🌐 Frontend uses `browser-testing-with-devtools`; 🍎 Apple/Swift uses `ios-debugger-agent`, `device-interaction`, Xcode build/test commands, or the relevant App Store Connect skills when release flow is involved; ⚙️ Backend/API uses the project's integration/smoke-test commands.
 
 ## Phase C — Decision and rollback
 

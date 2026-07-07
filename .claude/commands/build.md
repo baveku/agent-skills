@@ -4,17 +4,18 @@ description: Implement tasks incrementally — build, test, verify, commit. Add 
 
 Invoke the agent-skills:incremental-implementation skill alongside agent-skills:test-driven-development.
 
-Before implementing, classify the task by platform and surface, then invoke the most specific available platform skill:
+Before implementing, detect the project lane per `rules/skill-routing.md` (or trust the lane pinned in the project's `AGENTS.md`/spec), then invoke the most specific skill from that lane's bucket:
 
-| Task shape | Add this skill |
-| --- | --- |
-| Web UI or browser-facing UX | `frontend-ui-engineering` |
-| SwiftUI screen, navigation, state, or layout | `swiftui-ui-patterns` |
-| SwiftUI refactor or large view cleanup | `swiftui-view-refactor` |
-| Swift concurrency / SwiftData / Apple security | `swift-concurrency-pro`, `swiftdata-pro`, or `swift-security-expert` as applicable |
-| Runtime UI verification needed | web: `browser-testing-with-devtools`; iOS: `ios-debugger-agent` or `device-interaction` |
+| Task shape | Lane | Add this skill |
+| --- | --- | --- |
+| Web UI or browser-facing UX | 🌐 | `frontend-ui-engineering` |
+| SwiftUI screen, navigation, state, or layout | 🍎 | `swiftui-ui-patterns` |
+| SwiftUI refactor or large view cleanup | 🍎 | `swiftui-view-refactor` |
+| Swift concurrency / SwiftData / Apple security | 🍎 | `swift-concurrency-pro`, `swiftdata-pro`, or `swift-security-expert` as applicable |
+| API endpoint, contract, or service boundary | ⚙️ | `api-and-interface-design` (+ `security-and-hardening` on any untrusted-input/auth path) |
+| Runtime verification needed | — | 🌐 `browser-testing-with-devtools`; 🍎 `ios-debugger-agent` or `device-interaction`; ⚙️ project test/integration commands |
 
-Use at most one lifecycle skill, one platform/domain skill, and one verification skill unless the task is explicitly production-bound or cross-cutting.
+Stay in the detected lane: use its bucket plus the Shared bucket only. Use at most one lifecycle skill, one lane skill, and one verification skill unless the task is explicitly production-bound or cross-cutting.
 
 ## Modes
 
@@ -28,7 +29,7 @@ Use at most one lifecycle skill, one platform/domain skill, and one verification
 Pick the next pending task from the plan. Then:
 
 1. Read the task's acceptance criteria
-2. Classify lifecycle, platform, and surface; load the matching web or Apple-platform skill if one exists
+2. Detect the lane (🍎/🌐/⚙️) per `rules/skill-routing.md`, then load the matching lane skill if one exists
 3. Load relevant context (existing code, patterns, types)
 4. Write a failing test for the expected behavior (RED)
 5. Implement the minimum code to pass the test (GREEN)

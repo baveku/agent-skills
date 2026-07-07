@@ -63,8 +63,8 @@ OpenCode agents are instructed (via `AGENTS.md`) to:
 
 The agent evaluates every request and maps it to the appropriate skill by classifying:
 
-1. Lifecycle: define, plan, build, verify, review, ship.
-2. Platform: web, Apple platform, or shared backend/library.
+1. Project lane (detect first): 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API — see `rules/skill-routing.md`.
+2. Lifecycle: define, plan, build, verify, review, ship.
 3. Surface: UI, API, persistence, runtime verification, performance, security, accessibility, release.
 
 Examples:

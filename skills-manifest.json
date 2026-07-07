@@ -55,7 +55,6 @@
         { "src": "ios-debugger-agent", "dest": "ios-debugger-agent" },
         { "src": "macos-spm-app-packaging", "dest": "macos-spm-packaging" },
         { "src": "review-swarm", "dest": "review-swarm" },
-        { "src": "swift-concurrency-expert", "dest": "swift-concurrency-expert" },
         { "src": "swiftui-liquid-glass", "dest": "swiftui-liquid-glass" },
         { "src": "swiftui-performance-audit", "dest": "swiftui-performance-audit" },
         { "src": "swiftui-ui-patterns", "dest": "swiftui-ui-patterns" },

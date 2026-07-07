@@ -27,36 +27,41 @@ The agent should automatically map user intent to skills:
 - Code review → `code-review-and-quality`
 - Refactoring / simplification → `code-simplification`
 - API or interface design → `api-and-interface-design`
-- UI work → classify platform first, then use the most specific platform UI skill
+- UI work → detect the project lane first, then use the most specific lane UI skill
 
-### Platform → Skill Routing
+### Project Lane → Skill Routing
+
+`rules/skill-routing.md` is the canonical routing policy. This section summarizes it for harnesses that do not auto-load `rules/`.
 
 Classify every engineering request in this order:
 
-1. **Lifecycle** — define, plan, build, verify, review, ship
-2. **Platform** — web, Apple platforms (iOS, macOS, watchOS, tvOS), or shared backend/library
+1. **Project lane** (detect first) — 🍎 Apple/Swift, 🌐 Frontend, or ⚙️ Backend/API. Detect from repo files: `*.xcodeproj`/`Package.swift`/`*.swift` → 🍎; `package.json`+react/vue/svelte/vite or `*.tsx` → 🌐; `go.mod`/`Cargo.toml`/`pyproject.toml`/server `package.json`/`Dockerfile`+API → ⚙️. In a monorepo, detect per touched directory. A per-project `AGENTS.md` that pins a lane overrides detection.
+2. **Lifecycle** — define, plan, build, verify, review, ship
 3. **Surface** — UI, state, API, persistence, native bridge, build, testing, runtime verification, performance, security, accessibility, release
 
-Use the most specific available skill before a generic skill:
+Stay in the detected lane: use its bucket plus the Shared (lifecycle) bucket only; cross lanes only for genuinely cross-cutting work and say so. Use the most specific available skill before a generic one:
 
-| Platform / surface | Prefer | Fallback |
+| Lane | Surface | Prefer |
 | --- | --- | --- |
-| Web UI | `frontend-ui-engineering` | `api-and-interface-design` for contracts |
-| Web runtime verification | `browser-testing-with-devtools` | project test scripts |
-| Web performance / Core Web Vitals | `/webperf`, `performance-optimization` | `browser-testing-with-devtools` when runtime data is needed |
-| iOS SwiftUI UI | `swiftui-ui-patterns`, `swiftui-pro`, `swiftui-view-refactor` | `frontend-ui-engineering` only for generic UI principles |
-| iOS SwiftUI performance | `swiftui-performance-audit` | `performance-optimization` |
-| iOS accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` | `frontend-ui-engineering` accessibility rules |
-| iOS runtime verification | `ios-debugger-agent`, `device-interaction` | Xcode build/test commands from the project |
-| Swift concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` | `security-and-hardening` for general security |
+| 🍎 | SwiftUI UI | `swiftui-ui-patterns`, `swiftui-pro`, `swiftui-view-refactor` |
+| 🍎 | SwiftUI performance | `swiftui-performance-audit` |
+| 🍎 | Accessibility | `swiftui-accessibility-auditor`, `ios-accessibility` |
+| 🍎 | Runtime verification | `ios-debugger-agent`, `device-interaction` |
+| 🍎 | Concurrency / data / security | `swift-concurrency-pro`, `swiftdata-pro`, `swift-security-expert` |
+| 🌐 | Web UI / state | `frontend-ui-engineering` |
+| 🌐 | Runtime verification | `browser-testing-with-devtools` |
+| 🌐 | Performance / Core Web Vitals | `/webperf`, `performance-optimization` |
+| ⚙️ | API contract / boundary | `api-and-interface-design` |
+| ⚙️ | Untrusted input / auth | `security-and-hardening` |
+| ⚙️ | Observability | `observability-and-instrumentation` |
 
 Android, React Native, and KMP are future expansion targets, not current production routing targets. Do not invent missing skills for them; use the generic lifecycle skill plus `source-driven-development` and the project's local commands.
 
 ### Skill Selection Limits
 
-- Prefer one lifecycle skill + one platform/domain skill + one verification skill per turn.
+- Prefer one lifecycle skill + one lane skill + one verification skill per turn.
 - Add more only when the user asks for a full workflow or the change is production-bound and cross-cutting.
-- Generic skills are defaults; platform-specific skills override them.
+- Generic (Shared-bucket) skills are defaults; lane-specific skills override them.
 
 ### Lifecycle Mapping (Implicit Commands)
 
@@ -75,8 +80,8 @@ Instead, the agent must internally follow this lifecycle:
 
 For every request:
 
-1. Determine lifecycle, platform, and surface.
-2. Choose the most specific applicable skill from the platform routing table.
+1. Detect the project lane, then determine lifecycle and surface.
+2. Choose the most specific applicable skill from the detected lane's routing table.
 3. Invoke the appropriate skill using the `skill` tool. If the harness has no `skill` tool, read `skills/<skill-name>/SKILL.md` fully and follow it.
 4. Follow the skill workflow strictly.
 5. Only proceed to implementation after required steps (spec, plan, etc.) are complete.
