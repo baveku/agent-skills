@@ -183,7 +183,7 @@ Each router is the single entry point for its lane; its domain skills live under
 
 | Router | Lane | References |
 |--------|------|------------|
-| [swift-best-practices](skills/swift-best-practices/SKILL.md) | 🍎 Apple/Swift | 31 — SwiftUI (patterns, review, performance, Apple-authored guidance), concurrency, SwiftData, testing, UIKit, accessibility, security, simulator/device debugging, Xcode build/signing, App Store Connect release, ASO, macOS packaging, C interop |
+| [swift-best-practices](skills/swift-best-practices/SKILL.md) | 🍎 Apple/Swift | 34 — SwiftUI (patterns, review, performance, Apple-authored guidance), concurrency, SwiftData, testing, UIKit, accessibility, security, simulator/device debugging, Xcode build/signing, App Store Connect release, ASO, macOS packaging, C interop |
 | [web-best-practices](skills/web-best-practices/SKILL.md) | 🌐 Frontend | 2 — frontend UI engineering, browser runtime verification via Chrome DevTools |
 | [backend-best-practices](skills/backend-best-practices/SKILL.md) | ⚙️ Backend/API | 4 — API contracts, security hardening, observability, CI/CD |
 | [react-native-best-practices](skills/react-native-best-practices/SKILL.md) | 📱 React Native | 29 — Callstack performance guide: FPS/re-renders, TTI, bundle size, memory, animations, Turbo Modules |
@@ -320,7 +320,7 @@ agent-skills/
 │   ├── code-review-and-quality/       #   Review   (also: code-simplification, performance)
 │   ├── shipping-and-launch/           #   Ship     (also: git-workflow, deprecation, docs)
 │   ├── using-agent-skills/            #   Meta: routing + operating rules
-│   ├── swift-best-practices/          #   🍎 lane router → references/ (31 Apple skills)
+│   ├── swift-best-practices/          #   🍎 lane router → references/ (34 Apple skills)
 │   ├── web-best-practices/            #   🌐 lane router → references/
 │   ├── backend-best-practices/        #   ⚙️ lane router → references/
 │   ├── kotlin-best-practices/         #   🅺 lane router → references/ (JetBrains)

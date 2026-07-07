@@ -27,9 +27,9 @@ Several references are Apple-authored and **supersede training** (marked ⭐ bel
 | 2 | SwiftUI UI, review, performance | HIGH | `swiftui-*` |
 | 3 | Concurrency, persistence, architecture, testing | HIGH | `swift-*`, `swiftdata-*`, `modernize-tests` |
 | 4 | Runtime verification & debugging | HIGH | `ios-debugger-agent`, `device-interaction` |
-| 5 | Security & accessibility | MEDIUM-HIGH | `*-security-*`, `*-accessibility-*` |
+| 5 | Security & accessibility | MEDIUM-HIGH | `*-security-*`, `*-accessibility-*`, `audit-xcode-security-settings` |
 | 6 | Build, signing, release, App Store | MEDIUM | `asc-*`, `appstore-*` |
-| 7 | UIKit, packaging, C interop | MEDIUM | `uikit-*`, `macos-spm-packaging`, `c-bounds-safety` |
+| 7 | UIKit, packaging, C interop | MEDIUM | `uikit-*`, `macos-spm-packaging`, `*-bounds-safety` |
 
 Impact labels are triage hints: CRITICAL rows are read-before-answering; the rest load when the task reaches that surface.
 
@@ -87,6 +87,7 @@ Full documentation in [references/][references] — each entry is a complete ski
 | [swift-testing-pro][swift-testing-pro] | HIGH | Swift Testing authoring and review |
 | [modernize-tests][modernize-tests] | MEDIUM | Migrating XCTest to Swift Testing |
 | [swift-security-expert][swift-security-expert] | MEDIUM-HIGH | Keychain, CryptoKit, ATS, entitlements |
+| [adopt-c-bounds-safety][adopt-c-bounds-safety] | HIGH | Adopting Apple's `-fbounds-safety` language extension in C code |
 | [c-bounds-safety][c-bounds-safety] | MEDIUM | C interop bounds safety |
 
 ### Runtime & Platform
@@ -96,6 +97,7 @@ Full documentation in [references/][references] — each entry is a complete ski
 | [ios-debugger-agent][ios-debugger-agent] | HIGH | Simulator/device runtime debugging |
 | [device-interaction][device-interaction] | HIGH | Driving a simulator/device for verification |
 | [ios-accessibility][ios-accessibility] | MEDIUM-HIGH | Platform-wide iOS accessibility |
+| [uikit-app-modernization][uikit-app-modernization] | HIGH | UIKit multi-window modernization for shared-state APIs |
 | [uikit-modernization][uikit-modernization] | MEDIUM | UIKit modernization / migration toward SwiftUI |
 | [uikit-accessibility-auditor][uikit-accessibility-auditor] | MEDIUM | UIKit accessibility audit |
 | [macos-spm-packaging][macos-spm-packaging] | MEDIUM | macOS app packaging with SwiftPM |
@@ -106,6 +108,7 @@ Full documentation in [references/][references] — each entry is a complete ski
 |-----------|--------|-------------|
 | [asc-xcode-build][asc-xcode-build] | HIGH | Xcode build, xcodebuild invocation |
 | [asc-signing-setup][asc-signing-setup] | HIGH | Code signing, certificates, provisioning |
+| [audit-xcode-security-settings][audit-xcode-security-settings] | HIGH | Security-oriented Xcode build settings and compiler/analyzer hardening |
 | [audit-xcode-security][audit-xcode-security] | MEDIUM-HIGH | Xcode project security audit |
 | [asc-release-flow][asc-release-flow] | MEDIUM | Release flow to the App Store |
 | [asc-testflight-orchestration][asc-testflight-orchestration] | MEDIUM | TestFlight distribution |
@@ -130,7 +133,10 @@ Full documentation in [references/][references] — each entry is a complete ski
 | Verify behavior on simulator/device | [device-interaction][device-interaction] → [ios-debugger-agent][ios-debugger-agent] |
 | Accessibility audit | [swiftui-accessibility-auditor][swiftui-accessibility-auditor] or [uikit-accessibility-auditor][uikit-accessibility-auditor] → [ios-accessibility][ios-accessibility] |
 | Keychain / crypto / entitlements | [swift-security-expert][swift-security-expert] |
+| Adopt C `-fbounds-safety` | [adopt-c-bounds-safety][adopt-c-bounds-safety] → [c-bounds-safety][c-bounds-safety] |
+| Modernize UIKit shared-state APIs | [uikit-app-modernization][uikit-app-modernization] |
 | Build fails / signing broken | [asc-xcode-build][asc-xcode-build] → [asc-signing-setup][asc-signing-setup] |
+| Harden Xcode security settings | [audit-xcode-security-settings][audit-xcode-security-settings] |
 | Ship to TestFlight / App Store | [asc-release-flow][asc-release-flow] → [asc-testflight-orchestration][asc-testflight-orchestration] |
 | Crash reports to triage | [asc-crash-triage][asc-crash-triage] |
 | App Store rejection risk | [appstore-review][appstore-review] |
@@ -170,15 +176,18 @@ Full documentation in [references/][references] — each entry is a complete ski
 [swift-testing-pro]: references/swift-testing-pro/SKILL.md
 [modernize-tests]: references/modernize-tests/SKILL.md
 [swift-security-expert]: references/swift-security-expert/SKILL.md
+[adopt-c-bounds-safety]: references/adopt-c-bounds-safety/SKILL.md
 [c-bounds-safety]: references/c-bounds-safety/SKILL.md
 [ios-debugger-agent]: references/ios-debugger-agent/SKILL.md
 [device-interaction]: references/device-interaction/SKILL.md
 [ios-accessibility]: references/ios-accessibility/SKILL.md
+[uikit-app-modernization]: references/uikit-app-modernization/SKILL.md
 [uikit-modernization]: references/uikit-modernization/SKILL.md
 [uikit-accessibility-auditor]: references/uikit-accessibility-auditor/SKILL.md
 [macos-spm-packaging]: references/macos-spm-packaging/SKILL.md
 [asc-xcode-build]: references/asc-xcode-build/SKILL.md
 [asc-signing-setup]: references/asc-signing-setup/SKILL.md
+[audit-xcode-security-settings]: references/audit-xcode-security-settings/SKILL.md
 [audit-xcode-security]: references/audit-xcode-security/SKILL.md
 [asc-release-flow]: references/asc-release-flow/SKILL.md
 [asc-testflight-orchestration]: references/asc-testflight-orchestration/SKILL.md
