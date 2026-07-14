@@ -11,6 +11,8 @@ codex plugin marketplace add baveku/agent-skills
 codex plugin add agent-skills@baveku-agent-skills
 ```
 
+> Requires Codex CLI v0.122 or later. On older releases, use `codex marketplace add` for the first command. See the [Codex CLI docs](https://developers.openai.com/codex/cli).
+
 ## Install from a local clone
 
 ```bash
@@ -29,7 +31,7 @@ Codex reads `.codex-plugin/plugin.json`, then loads skills from:
 codex/skills/
 ```
 
-That directory is an alias-free view of the shared skill catalog. It intentionally excludes Antigravity-only slash aliases such as `skills/spec`, `skills/build`, and `skills/ship`.
+That directory is an alias-free view of the shared skill catalog. It intentionally excludes Antigravity-only slash aliases such as `skills/spec`, `skills/build`, and `skills/ship`. The manifest declares an empty Codex hook configuration so Codex does not auto-load Claude-oriented hooks.
 
 ## Commands
 

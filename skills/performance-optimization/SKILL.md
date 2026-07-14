@@ -1,6 +1,6 @@
 ---
 name: performance-optimization
-description: Optimizes application performance across web and Apple platforms. Use when performance requirements exist, when you suspect performance regressions, when Core Web Vitals or load times need improvement, or when Instruments/MetricKit reveal bottlenecks in iOS/macOS apps. Covers React/TypeScript frontend, backend APIs, and Swift/SwiftUI native apps.
+description: Optimizes application performance across web, backend, queries, databases, and Apple platforms. Use when performance requirements exist, when you suspect regressions, when Core Web Vitals or load times need improvement, when N+1 query patterns need fixing, or when profiling, Instruments, or MetricKit reveal bottlenecks. Covers React/TypeScript frontend, backend APIs, and Swift/SwiftUI native apps.
 ---
 
 # Performance Optimization

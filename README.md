@@ -54,6 +54,23 @@ Platform skills are vendored under `skills/` and updated manually via `skills-ma
 
 ## Quick Start
 
+**Fastest path — any agent, one command.** The open [skills CLI](https://github.com/vercel-labs/skills) installs into 70+ agents (Claude Code, Cursor, Codex, Copilot, Cline, and more):
+
+```bash
+npx skills add addyosmani/agent-skills            # install all 24 skills
+npx skills add addyosmani/agent-skills --list     # browse before installing
+```
+
+Or grab individual skills:
+
+```bash
+npx skills add addyosmani/agent-skills --skill code-review-and-quality   # five-axis review before merge
+npx skills add addyosmani/agent-skills --skill interview-me              # requirements interrogation, one question at a time
+npx skills add addyosmani/agent-skills --skill test-driven-development   # red-green-refactor, enforced
+```
+
+Prefer a native integration? Pick your tool below.
+
 <details>
 <summary><b>Claude Code (recommended)</b></summary>
 
@@ -64,10 +81,15 @@ Platform skills are vendored under `skills/` and updated manually via `skills-ma
 /plugin install agent-skills@baveku-agent-skills
 ```
 
-> **SSH errors?** The marketplace clones repos via SSH. If you don't have SSH keys set up on GitHub, either [add your SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) or use the full HTTPS URL to force the HTTPS cloning:
+> **SSH errors?** The marketplace clones repos via SSH. If you don't have SSH keys set up on GitHub, either [add your SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) or use the full HTTPS URL to force HTTPS cloning during the marketplace-add step:
 > ```bash
 > /plugin marketplace add https://github.com/baveku/agent-skills.git
 > /plugin install agent-skills@baveku-agent-skills
+> ```
+>
+> If `/plugin install` still fails with `git@github.com: Permission denied (publickey)` on Windows or macOS, the recommended workaround is to configure Git once to rewrite GitHub SSH URLs to HTTPS for subprocess clones:
+> ```bash
+> git config --global url."https://github.com/".insteadOf git@github.com:
 > ```
 
 **Local / development:**
@@ -82,7 +104,7 @@ claude --plugin-dir /path/to/agent-skills
 <details>
 <summary><b>Cursor</b></summary>
 
-Copy any `SKILL.md` into `.cursor/rules/`, or reference the full `skills/` directory. See [docs/cursor-setup.md](docs/cursor-setup.md).
+Put workflow skills under `.cursor/skills/` (sync from `agent-skills/skills/`) and short policies in `.cursor/rules/*.mdc` — do not paste full skills into rules. See [docs/cursor-setup.md](docs/cursor-setup.md).
 
 </details>
 
@@ -152,7 +174,7 @@ codex plugin marketplace add ./agent-skills
 codex plugin add agent-skills@baveku-agent-skills
 ```
 
-The Codex plugin uses `.codex-plugin/plugin.json` and points at `codex/skills/`, so it avoids Antigravity-only slash aliases. See [docs/codex-setup.md](docs/codex-setup.md).
+The Codex plugin requires Codex CLI v0.122+ and uses `.codex-plugin/plugin.json` to load the alias-free `codex/skills/` catalog. Invoke skills in chat using `@` (for example, `@spec-driven-development`). See [docs/codex-setup.md](docs/codex-setup.md).
 
 </details>
 
@@ -164,6 +186,12 @@ Skills are plain Markdown - they work with any agent that accepts system prompts
 </details>
 
 
+
+---
+
+## Adoption
+
+Already installed? How you roll the pack out depends on your codebase. The **[Adoption Guide](docs/adoption-guide.md)** covers two paths: the full lifecycle from day one for a greenfield project, or an incremental, verification-first rollout for an established codebase.
 
 ---
 
@@ -365,6 +393,18 @@ Wondering how this stacks up against [Superpowers](https://github.com/obra/super
 Skills should be **specific** (actionable steps, not vague advice), **verifiable** (clear exit criteria with evidence requirements), **battle-tested** (based on real workflows), and **minimal** (only what's needed to guide the agent).
 
 See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the format specification and [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## Team
+
+agent-skills is built and maintained by:
+
+| | Name | GitHub | Role |
+|---|------|--------|------|
+| <img src="https://github.com/addyosmani.png?size=120" width="60" height="60" alt="Addy Osmani"> | **Addy Osmani** | [@addyosmani](https://github.com/addyosmani) | Creator |
+| <img src="https://github.com/federicobartoli.png?size=120" width="60" height="60" alt="Federico Bartoli"> | **Federico Bartoli** | [@federicobartoli](https://github.com/federicobartoli) | Collaborator |
+| <img src="https://github.com/nucliweb.png?size=120" width="60" height="60" alt="Joan León"> | **Joan León** | [@nucliweb](https://github.com/nucliweb) | Collaborator |
 
 ---
 

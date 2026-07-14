@@ -25,6 +25,9 @@
     "ship"
   ],
   "skills": "./codex/skills",
+  "hooks": {
+    "hooks": {}
+  },
   "interface": {
     "displayName": "Agent Skills",
     "shortDescription": "Production engineering workflows with Apple-platform support.",
